@@ -282,6 +282,8 @@ class NCLinearConceptEmbedding(nn.Module):
     def compute_all_similarity(self, query):
         assert self.linear is not None, 'Must call init_linear_layers() first.'
         logits = self.linear(query)
+        print(f"LINEAR_INPUT_DIM: {self.linear_input_dim} | INPUT-SHAPE: {query.shape} | OUTPUT-SHAPE: {logits.shape}")
+        print(self.extra_state_dict())
         return logits
 
     def compute_description(self, query, identifier):

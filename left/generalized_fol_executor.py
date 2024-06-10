@@ -168,6 +168,7 @@ class NCGeneralizedFOLExecutor(FunctionDomainExecutor):
                     assert len(args) == 3
                     grounding_tensor = self.grounding.compute_similarity('multi_relation', expr.function.name)
 
+                print(f"{len(args)} - {expr.function.name} - {grounding_tensor.shape}")
                 # e.g., temporal shift
                 if self.allow_shift_grounding and len(args) == 2 and len(grounding_tensor.size()) == 1:
                     shift = True
