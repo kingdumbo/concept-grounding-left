@@ -1,4 +1,12 @@
+import sys
+sys.path.append("/home/max/uni/LEFT/Jacinle")
+sys.path.append("/home/max/uni/LEFT/")
+
 from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
+from concepts.dsl.dsl_functions import Function, FunctionTyping
+from concepts.dsl.dsl_types import ObjectType, BOOL, INT64, Variable
+from concepts.dsl.function_domain import FunctionDomain
+from left.domain import create_bare_domain
 import networkx as nx
 import matplotlib.pyplot as plt
 from pyvis.network import Network
@@ -27,6 +35,9 @@ class Scenegraph:
         self.sg_color_map = []
 
         self.reset() # set empty graph
+
+        # for FOL executor
+        self.training = False
 
     def update(self):
         state = self.env.get_state()
@@ -299,9 +310,23 @@ class Scenegraph:
                 net.add_edge(source, target, title=title, **data)
             net.show("network.html")
 
-    
-    def get_vectorized_graph(self):
-        pass
+
+    def get_domain(self):
+        # constructs domain from graph/evnv
+        domain = create_bare_domain()
+
+        OBJECT = ObjectType("Object")
+        
+        # create functions for the attributes
+        for attr in self.attributes:
+            #domain.define_function(Function(f"{attr}_Object", FunctionTyping[BOOL](OBJECT)))
+            domain.define_function(Function(attr, FunctionTyping[BOOL](OBJECT)))
+
+        # create functions for the relations
+        for rel in self.relations:
+            domain.define_function(Function(rel, FunctionTyping[BOOL](OBJECT,OBJECT)))
+
+        return domain
 
 
 
@@ -309,7 +334,10 @@ if __name__ == "__main__":
     env = CleaningUpTheKitchenOnlyEnv()
     sg = Scenegraph(env)
     sg.update()
-    sg.render(fancy_vis=True)
+    domain = sg.get_domain()
+    domain.print_summary()
+    
+    #sg.render(fancy_vis=True)
 
     # Interactive loop to accept arguments and call get_attr_for_id
     while True:

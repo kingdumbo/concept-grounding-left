@@ -169,7 +169,7 @@ class LeftModel(nn.Module):
                     parsing = raw_parsing
                     program = self.parser.parse_expression(raw_parsing)
                 except Exception as e:
-                    raise ExecutionFailed('Parsing failed for question: {}.'.format(question)) from e
+                    raise ExecutionFailed('Parsing failed for question: {}'.format(question)) from e
 
                 try:
                     if not self.training:
