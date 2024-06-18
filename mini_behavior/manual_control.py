@@ -89,7 +89,7 @@ def step(action):
 
     # INSERTION FOR TESTING Scenegraph
     sg.update()
-    sg.render()
+    sg.render(continual_rendering=True)
 
     print('step=%s, reward=%.2f' % (env.step_count, reward))
 
@@ -254,7 +254,7 @@ env = gym.make(args.env)
 # insert scenegraph
 sg = Scenegraph(env=env)
 sg.update()
-sg.render()
+sg.render(continual_rendering=True)
 
 env.teleop_mode()
 if args.save:

@@ -1,7 +1,9 @@
 import sys
 sys.path.append("/home/max/uni/LEFT/Jacinle")
 sys.path.append("/home/max/uni/LEFT/")
+sys.path.append("/home/max/uni/LEFT/scenegraph/")
 
+from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS
 from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
 from concepts.dsl.dsl_functions import Function, FunctionTyping
 from concepts.dsl.dsl_types import ObjectType, BOOL, INT64, Variable
@@ -11,19 +13,21 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from pyvis.network import Network
 import torch
+from livereload import Server
 
 class Scenegraph:
     def __init__(self, env):
+        #JUST TRYING
+        self.rendering = False
+
         self.env = env
 
-        # get types of states
-        # TODO get states passed e.g. from Domain class or something,
-        # because domain and these states definitely need to be synchronized
-        self.agent_rel_states = ["infovofrobot", "inhandofrobot", "inreachofrobot", "insameroomasrobot", "isnear"] # IMPORTANT: isnear was manually added
-        self.abs_states = ["cookable", "dustyable", "freezable", "openable", "sliceable", "soakable", "stainable", "toggleable", "onfloor", "coldSource", "cleaningTool"]
+        # set types of states
+        self.agent_rel_states = AGENT_RELATIVE_STATES
+        self.abs_states = ABSOLUTE_STATES
         self.attributes = [*self.agent_rel_states, *self.abs_states]
         # TODO include type in attributes (furniture)
-        self.relations = ["atsamelocation", "inside", "nextto", "onTop", "under"]
+        self.relations = RELATIONS
 
         # to simplify lookup for relational attributes
         self.obj_to_node = {}
@@ -291,7 +295,7 @@ class Scenegraph:
         return feature_vector
         
 
-    def render(self, fancy_vis=True):
+    def render(self, fancy_vis=True, continual_rendering=False):
         # render graph either using matplotlib or with pyvis (fancy)
         if fancy_vis == False:
             pos = nx.spring_layout(self.sg, k=0.1, iterations=20)
@@ -308,7 +312,22 @@ class Scenegraph:
             for source, target, data in self.sg.edges(data=True):
                 title = " | ".join([f"{key}: {value}" for key, value in data.items()])
                 net.add_edge(source, target, title=title, **data)
-            net.show("network.html")
+            if not continual_rendering:
+                net.show("network.html", notebook=False)
+            else:
+                self.html_filename = "network.html"
+                # Save the network visualization to a fixed HTML file
+                net.write_html(self.html_filename, open_browser =False)
+                
+                if not self.rendering:
+                    import threading
+                    self.rendering=True
+                    server = Server()
+                    path = "/home/max/uni/LEFT/network.html"
+                    server.watch(path)
+                    server_thread = threading.Thread(target=server.serve)
+                    server_thread.setDaemon(True)
+                    server_thread.start()
 
 
     def get_domain(self):
@@ -337,7 +356,7 @@ if __name__ == "__main__":
     domain = sg.get_domain()
     domain.print_summary()
     
-    #sg.render(fancy_vis=True)
+    sg.render(fancy_vis=True)
 
     # Interactive loop to accept arguments and call get_attr_for_id
     while True:

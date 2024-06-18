@@ -35,7 +35,8 @@ if __name__ == "__main__":
     domain = sg.get_domain()
     domain.print_summary()
     #raw_parsing = "exists(Object, lambda x: infovofrobot(x))"
-    raw_parsing = "count(Object, lambda x: infovofrobot(x))"
+    #raw_parsing = "count(Object, lambda x: infovofrobot(x))"
+    raw_parsing = "iota(Object, lambda x: infovofrobot(x))"
     oracle = ScenegraphOracle(domain, sg)
     result = oracle.tell(raw_parsing)
     print(result)
