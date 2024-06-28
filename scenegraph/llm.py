@@ -1,6 +1,8 @@
-#from llama import Llama
+import fire
+from llama import Llama
 
 from pathlib import Path
+import json
 import os
 
 BASEBATH = Path(__file__).resolve().parent
@@ -23,24 +25,25 @@ def write_text_files(text_list, filenames, directory):
             file.write(text)
 
 class Llama3Parser:
-    def __init__(self, ckpt_dir, tokenizer_path):
+    def __init__(self, ckpt_dir, tokenizer_path, max_seq_len, max_batch_size):
         
         # instantiate llama
         self.generator = Llama.build(
             ckpt_dir=ckpt_dir,
             tokenizer_path=tokenizer_path,
-            max_seq_len=8192,
-            max_batch_size=100,
+            max_seq_len=max_seq_len,
+            max_batch_size=max_batch_size,
         )
 
 
-    def batch_parse_n_save(self, prompts, filenames):
-        results = self.batch_parse(prompts, filenames)
+    def batch_parse_n_save(self, prompts, filenames, max_gen_len, temperature, top_p):
+        results = self.batch_parse(prompts, max_gen_len, temperature, top_p)
+        results = [json.dumps(result) for result in results]
         write_text_files(results, filenames, RESULTS_DIRECTORY)
         
 
 
-    def batch_parse(self, prompts, max_gen_len=1000, temperature=0.6,top_p=0.9):
+    def batch_parse(self, prompts, max_gen_len=64, temperature=0.6,top_p=0.9):
         results = self.generator.text_completion(
             prompts,
             max_gen_len=max_gen_len,
@@ -50,16 +53,17 @@ class Llama3Parser:
         return results
 
 
-if __name__ == "__main__":
-
-    # get paths from environment variables
-    ckpt_dir = os.getenv("CKPT_DIR", "/work/projects/project02201/Sachin_ws/llama3/Meta-Llama-3-70B-Instruct")
-    tokenizer_path = os.getenv("TOKENIZER_PATH", "/work/projects/project02201/Sachin_ws/llama3/Meta-Llama-3-70B-Instruct/tokenizer.model")
-
-    # load prompts
+def main(ckpt_dir, tokenizer_path, max_seq_len, max_batch_size, max_gen_len, temperature, top_p):
     prompts, filenames = load_text_files(PROMPTS_DIRECTORY)
     llm = Llama3Parser(
         ckpt_dir=ckpt_dir, 
-        tokenizer_path=tokenizer_path
+        tokenizer_path=tokenizer_path,
+        max_seq_len=max_seq_len,
+        max_batch_size=max_batch_size,
     )
-    llm.batch_parse_n_save(prompts, filenames)
+    llm.batch_parse_n_save(prompts, filenames, max_gen_len=max_gen_len, temperature=temperature,top_p=top_p)
+
+
+if __name__ == "__main__":
+    fire.Fire(main)
+
