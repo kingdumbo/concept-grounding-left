@@ -16,6 +16,43 @@ I am going to ask you to write some programs to answer some questions based on a
 13. before you write the programs, first translate the language into a more simple form, removing excess information, for example, simplify <text>what's the color of the towel hanging draped over the side of the tub.</text> to <simplified>color of the towel on the tub</simplified>, before writing the correct program, <code>describle(Color, iota(Object, lambda x: towel(x) and on(x, iota(Object, lambda y: bathtub(y)))))</code>.
 
 ----
+You are only allowed to use the following properties:
+
+equal(x,y)
+greater_than(x,y)
+less_than(x,y)
+infovofrobot(x)
+inhandofrobot(x)
+inreachofrobot(x)
+insameroomasrobot(x)
+isnear(x)
+cookable(x)
+dustyable(x)
+freezable(x)
+openable(x)
+sliceable(x)
+soakable(x)
+stainable(x)
+toggleable(x)
+onfloor(x)
+coldSource(x)
+cleaningTool(x)
+atsamelocation(x,y)
+inside(x,y)
+nextto(x,y)
+onTop(x,y)
+under(x,y)
+blender(x)
+apple(x)
+broom(x)
+dustpan(x)
+plate(x)
+furniture(x)
+cabinet(x)
+countertop(x)
+
+
+----
 
 Now I first give you a few examples:
 
@@ -51,5 +88,4 @@ Now I first give you a few examples:
 <simplified>equal count of cakes and apples or less than count of cakes than apples</simplified>
 <code>equal(count(Object, lambda x: cake(x)), count(Object, lambda x: apple(x))) or less_than(count(Object, lambda x: cake(x)), count(Object, lambda x: apple(x)))</code>
 
-Now please translate the following text into a program. First output a simplified text version inside <simplified></simplified>, with a shortened version of <text>. Then, using ONLY the simplified text, without looking at the original text, output a short translated program inside <code></code>.
-<text>How many cats are there?</text>
+<text>Is there an object in front of the robot, which is next to another object?</text>

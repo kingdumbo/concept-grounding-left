@@ -51,4 +51,4 @@ Now I first give you a few examples:
 <simplified>equal count of cakes and apples or less than count of cakes than apples</simplified>
 <code>equal(count(Object, lambda x: cake(x)), count(Object, lambda x: apple(x))) or less_than(count(Object, lambda x: cake(x)), count(Object, lambda x: apple(x)))</code>
 
-<text>How many cats are there?</text>
+<text>Is there an object in front of the robot, which is next to another object?</text>

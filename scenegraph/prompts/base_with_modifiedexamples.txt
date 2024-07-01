@@ -19,36 +19,36 @@ I am going to ask you to write some programs to answer some questions based on a
 
 Now I first give you a few examples:
 
-<text>What is the size of the apple?</text>
-<simplified>size of apple</simplified>
-<code>describe(Size, iota(Object, lambda y: apple(y)))</code>
+<text>What is the position of the blender?</text>
+<simplified>position of blender</simplified>
+<code>describe(Position, iota(Object, lambda y: blender(y)))</code>
 
-<text>What is the shape of the cake that's not pink by itself in the corner?</text>
-<simplified>shape of cake not pink</simplified>
-<code>describe(Shape, iota(Object, lambda y: cake(y) and not(pink(y))))</code>
+<text>What is the height of the cabinet that's not in front of the robot?</text>
+<simplified>height of cabinet not infovrobot</simplified>
+<code>describe(Height, iota(Object, lambda y: cabinet(y) and not(infovrobot(y))))</code>
 
-<text>What is the color of the cake in the room?</text>
-<simplified>color of the cake</simplified>
-<code>describe(Color, iota(Object, lambda y: cake(y)))</code>
+<text>What is the color of the apple in the room?</text>
+<simplified>color of the apple</simplified>
+<code>describe(Color, iota(Object, lambda y: apple(y)))</code>
 
-<text>What is the material of the cat without an apple on itself?</text>
-<simplified>material of the cat that does not have an apple</simplified>
-<code>describe(Material, iota(Object, lambda y: cat(y) and not(have(y, iota(Object, lambda z: apple(z))))))</code>
+<text>What is the material of the plate without an apple next to it?</text>
+<simplified>material of the plate not next to an apple</simplified>
+<code>describe(Material, iota(Object, lambda y: plate(y) and not(nextto(y, iota(Object, lambda z: apple(z))))))</code>
 
-<text>How many apples does the cat have in its paws?</text>
-<simplified>count apples the cat have</simplified>
-<code>count(Object, lambda x: have(iota(Object, lambda y: cat(y)), x) and apple(x))</code>
+<text>How many pieces of furniture are nearby?</text>
+<simplified>count furniture isnear</simplified>
+<code>count(Object, lambda x: iota(Object, lambda y: furniture(y)), x)</code>
 
-<text>Are there more apples over cakes at the end of the room?</text>
-<simplified>greater count of apples than cakes</simplified>
-<code>greater_than(count(Object, lambda x: apple(x)), count(Object, lambda x: cake(x)))</code>
+<text>Are there more plates over brooms at the end of the room?</text>
+<simplified>greater count of paltes than brooms</simplified>
+<code>greater_than(count(Object, lambda x: plate(x)), count(Object, lambda x: broom(x)))</code>
 
-<text>Is there an apple next to the cake that is front and center of the room?</text>
-<simplified>exists apple next to the cake</simplified>
-<code>exists(Object, lambda x: apple(x) and next(x, iota(Object, lambda y: and cake(y))))</code>
+<text>Is there a rag on top of the countertop that is front and center of the room?</text>
+<simplified>exists rag on top of countertop</simplified>
+<code>exists(Object, lambda x: rag(x) and onTop(x, iota(Object, lambda y: and countertop(y))))</code>
 
-<text>Is there a same number of cakes and apples or is there less cakes than apples?</text>
-<simplified>equal count of cakes and apples or less than count of cakes than apples</simplified>
-<code>equal(count(Object, lambda x: cake(x)), count(Object, lambda x: apple(x))) or less_than(count(Object, lambda x: cake(x)), count(Object, lambda x: apple(x)))</code>
+<text>Is there a same number of dustpans and brooms or is there less dustpans than brooms?</text>
+<simplified>equal count of dustpans and brooms or less than count of dustpans than brooms</simplified>
+<code>equal(count(Object, lambda x: dustpan(x)), count(Object, lambda x: broom(x))) or less_than(count(Object, lambda x: dustpan(x)), count(Object, lambda x: broom(x)))</code>
 
-<text>How many cats are there?</text>
+<text>Is there an object in front of the robot, which is next to another object?</text>
