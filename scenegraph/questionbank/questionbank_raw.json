@@ -1,0 +1,18 @@
+[
+        {
+            "question": "How many objects are in front of the robot?",
+            "answer": "6"
+        },
+        {
+            "question": "Is there an object in front of the robot, which is also next to another object?",
+            "answer": "yes"
+        },
+        {
+            "question": "Is there a cleaning tool?",
+            "answer": "yes"
+        },
+        {
+            "question": "How many stainable things are there, that are also on the floor?",
+            "answer": "2"
+        }
+]

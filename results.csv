@@ -1,0 +1,3 @@
+,question,raw_parsing,answer,pred_answer
+0,How many objects are in front of the robot?,"count(Object, lambda x: infovofrobot(x))",4,6
+1,"Is there an object in front of the robot, which is also next to another object?","exists(Object, lambda x: infovofrobot(x) and exists(Object, lambda y: nextto(x, y)))",yes,yes

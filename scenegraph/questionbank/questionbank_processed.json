@@ -1,0 +1,12 @@
+[
+    {
+        "question": "How many objects are in front of the robot?",
+        "raw_parsing": "",
+        "answer": "4"
+    },
+    {
+        "question": "Is there an object in front of the robot, which is also next to another object?",
+        "raw_parsing": "",
+        "answer": "yes"
+    }
+]

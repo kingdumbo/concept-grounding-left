@@ -1,28 +1,18 @@
 import fire
-from llama import Llama
+#from llama import Llama
 
 from pathlib import Path
 import json
 import os
+import sys
 
-BASEBATH = Path(__file__).resolve().parent
-PROMPTS_DIRECTORY = BASEBATH / "prompts"
-RESULTS_DIRECTORY = BASEBATH / "results" / "raw"
+BASEPATH = Path(__file__).resolve().parent
+PROMPTS_DIRECTORY = BASEPATH / "prompts"
+RESULTS_DIRECTORY = BASEPATH / "results" / "raw"
 
-def load_text_files(directory):
-    text_list = []
-    filenames = []
-    for filepath in directory.glob("*.txt"):
-        with filepath.open('r') as file:
-            text_list.append(file.read())
-            filenames.append(filepath.name)
-    return text_list, filenames
+sys.path.append(BASEPATH)
+import utils
 
-def write_text_files(text_list, filenames, directory):
-    for text, filename in zip(text_list, filenames):
-        output_path = directory / filename
-        with output_path.open('w') as file:
-            file.write(text)
 
 class Llama3Parser:
     def __init__(self, ckpt_dir, tokenizer_path, max_seq_len, max_batch_size):
@@ -54,7 +44,13 @@ class Llama3Parser:
 
 
 def main(ckpt_dir, tokenizer_path, max_seq_len, max_batch_size, max_gen_len, temperature, top_p):
-    prompts, filenames = load_text_files(PROMPTS_DIRECTORY)
+    # load questions and save as prompt-files (txt)
+    utils.preprocess()
+
+    # load prompt files
+    prompts, filenames = utils.load_text_files(PROMPTS_DIRECTORY)
+
+    # parse them with the llm and save
     llm = Llama3Parser(
         ckpt_dir=ckpt_dir, 
         tokenizer_path=tokenizer_path,
@@ -63,6 +59,11 @@ def main(ckpt_dir, tokenizer_path, max_seq_len, max_batch_size, max_gen_len, tem
     )
     llm.batch_parse_n_save(prompts, filenames, max_gen_len=max_gen_len, temperature=temperature,top_p=top_p)
 
+    # update the questionbank with the raw-parsing translation of the questions
+    utils.process_llm_output()
+
+    # and print the result
+    print(load_questionbank(BASEPATH / "questionbank" / "questionbank_processed.json"))
 
 if __name__ == "__main__":
     fire.Fire(main)

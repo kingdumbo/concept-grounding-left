@@ -5,6 +5,7 @@ sys.path.append("/home/max/uni/LEFT/")
 sys.path.append("home/max/uni/LEFT/scenegraph")
 
 from scenegraph import Scenegraph
+from utils import load_questionbank
 from left.models.model import LeftModel
 from typing import Optional, Union, List, Dict
 from left.models.reasoning.reasoning import NCOneTimeComputingGrounding
@@ -33,6 +34,7 @@ class ScenegraphOracle(LeftModel):
                     grounding=self.grounding_cls)
         results = [r[2] for r in outputs["results"]]
         answers = [q["answer"] for q in qa_list]
+        
         questions = [q["question"] for q in qa_list]
         self._get_pred_answers(outputs, results)
         outputs["answer"] = answers
@@ -114,23 +116,15 @@ if __name__ == "__main__":
     sg.update()
     #sg.render()
     domain = sg.get_domain()
-    #domain.print_summary()
+    domain.print_summary()
 
-    ground_truth = [
-        {
-            "question": "How many objects are in front of the robot?",
-            "raw_parsing":  "count(Object, lambda x: infovofrobot(x))",
-            "answer": "4"
-        },
-        {
-            "question": "Is there an object in front of the robot, which is also next to another object?",
-            "raw_parsing": "exists(Object, lambda x: infovofrobot(x) and exists(Object, lambda y: nextto(x, y)))",
-            "answer": "yes"
-        }
-    ]
+    # load processed question bank
+    from pathlib import Path
+    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_processed.json"
+    questionbank = load_questionbank(qb_filepath)
 
     oracle = ScenegraphOracle(domain, sg)
-    output = oracle.tell(ground_truth)
+    output = oracle.tell(questionbank)
     print(output["answer"])
     acc = oracle.get_accuracy(output)
     print(acc)
