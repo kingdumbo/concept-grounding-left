@@ -1,1 +1,0 @@
-{"generation": "<text>Is there a cat with a white apple?</text>\n<text>How many cats are there with a red apple?</text>\n<text>Is the cat with the apple in its paws on the table?</text>\n<text>Is the apple on the table?</text>\n<text>How many cats are there with an apple in its paws?</text>\n<text>Is there a cat with a red apple on the table?</text>\n<text>Is there a cat with"}

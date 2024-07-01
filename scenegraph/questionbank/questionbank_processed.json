@@ -1,12 +1,27 @@
 [
     {
         "question": "How many objects are in front of the robot?",
-        "raw_parsing": "",
-        "answer": "4"
+        "answer": "6",
+        "raw_parsing": ""
     },
     {
         "question": "Is there an object in front of the robot, which is also next to another object?",
-        "raw_parsing": "",
-        "answer": "yes"
+        "answer": "yes",
+        "raw_parsing": ""
+    },
+    {
+        "question": "Is there a cleaning tool?",
+        "answer": "yes",
+        "raw_parsing": ""
+    },
+    {
+        "question": "How many stainable things are there, that are also on the floor?",
+        "answer": "2",
+        "raw_parsing": ""
+    },
+    {
+        "question": "What is the color of the apple in the room?",
+        "answer": "2",
+        "raw_parsing": ""
     }
 ]

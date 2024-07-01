@@ -14,5 +14,9 @@
         {
             "question": "How many stainable things are there, that are also on the floor?",
             "answer": "2"
+        },
+        {
+            "question": "What is the color of the apple in the room?",
+            "answer": "2"
         }
 ]

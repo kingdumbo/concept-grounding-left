@@ -1,1 +1,0 @@
-{"generation": "<simplified>exists an object in front of the robot, which is next to another object"}

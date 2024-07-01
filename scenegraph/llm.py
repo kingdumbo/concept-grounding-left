@@ -1,5 +1,5 @@
 import fire
-#from llama import Llama
+from llama import Llama
 
 from pathlib import Path
 import json
@@ -29,7 +29,7 @@ class Llama3Parser:
     def batch_parse_n_save(self, prompts, filenames, max_gen_len, temperature, top_p):
         results = self.batch_parse(prompts, max_gen_len, temperature, top_p)
         results = [json.dumps(result) for result in results]
-        write_text_files(results, filenames, RESULTS_DIRECTORY)
+        utils.write_text_files(results, filenames, RESULTS_DIRECTORY)
         
 
 
@@ -63,7 +63,7 @@ def main(ckpt_dir, tokenizer_path, max_seq_len, max_batch_size, max_gen_len, tem
     utils.process_llm_output()
 
     # and print the result
-    print(load_questionbank(BASEPATH / "questionbank" / "questionbank_processed.json"))
+    print(utils.load_questionbank(BASEPATH / "questionbank" / "questionbank_processed.json"))
 
 if __name__ == "__main__":
     fire.Fire(main)

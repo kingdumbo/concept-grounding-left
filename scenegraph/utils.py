@@ -62,7 +62,7 @@ def extract_raw_parsings(raw_llm_output_strings):
     for i, output in enumerate(raw_llm_output_strings):
         raw_parsing = ""
         try:
-            raw_parsing = extrag_tag_inner(output, "code")[0]
+            raw_parsing = extract_tag_inner(output, "code")[0]
         except Exception as e:
             print(f"No code found at id {i} for raw output: {output}")
         raw_parsings.append(raw_parsing)
