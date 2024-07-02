@@ -53,6 +53,8 @@ class ScenegraphOracle(LeftModel):
         try:
             result_typename = result.dtype.typename
         except:
+            if result is None:
+                return ""
             result_typename = result.dtype
         if result_typename == "bool":
             return "yes" if result.tensor.item() > 0 else "no"
@@ -106,9 +108,6 @@ class ScenegraphOracle(LeftModel):
 
         return df
         
-        
-
-
 
 if __name__ == "__main__":
     env = CleaningUpTheKitchenOnlyEnv()
@@ -125,7 +124,6 @@ if __name__ == "__main__":
 
     oracle = ScenegraphOracle(domain, sg)
     output = oracle.tell(questionbank)
-    print(output["answer"])
     acc = oracle.get_accuracy(output)
     print(acc)
     print(oracle.summarize_output(output, save_to_csv=True, only_false_answers=False).head())

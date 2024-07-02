@@ -10,7 +10,8 @@ QUESTIONBANK_DIRECTORY = BASEBATH / "questionbank"
 def load_text_files(directory):
     text_list = []
     filenames = []
-    for filepath in directory.glob("*.txt"):
+    textfiles_sorted = sorted(directory.glob("*.txt"))
+    for filepath in textfiles_sorted:
         with filepath.open('r') as file:
             text_list.append(file.read())
             filenames.append(filepath.name)
@@ -38,7 +39,7 @@ def extract_tag_inner(text, tag):
     pattern = fr'<{tag}>(.*?)</{tag}>'
     
     # Find all strings between the specified tags
-    extracted_strings = re.findall(pattern, input_text, re.DOTALL)
+    extracted_strings = re.findall(pattern, text, re.DOTALL)
     
     return extracted_strings
 
