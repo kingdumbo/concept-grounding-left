@@ -3,7 +3,7 @@ sys.path.append("/home/max/uni/LEFT/Jacinle")
 sys.path.append("/home/max/uni/LEFT/")
 sys.path.append("/home/max/uni/LEFT/scenegraph/")
 
-from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS
+from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS, OBJ_BOOL_PROPS, OBJ_PROPS
 from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
 from concepts.dsl.dsl_functions import Function, FunctionTyping
 from concepts.dsl.dsl_types import ObjectType, BOOL, INT64, Variable
@@ -22,12 +22,19 @@ class Scenegraph:
 
         self.env = env
 
+        # initialize properties of obj e.g. type="blender" to bool blender(x)->bool
+        self.bool_props = OBJ_BOOL_PROPS
+        self.obj_props = OBJ_PROPS
+        all_obj_prop_values = self._get_all_obj_prop_vals(env, self.obj_props)
+
         # set types of states
         self.agent_rel_states = AGENT_RELATIVE_STATES
         self.abs_states = ABSOLUTE_STATES
-        self.attributes = [*self.agent_rel_states, *self.abs_states]
+        self.attributes = [*self.agent_rel_states, *self.abs_states, *all_obj_prop_values, *self.bool_props]
+        breakpoint()
         # TODO include type in attributes (furniture)
         self.relations = RELATIONS
+
 
         # to simplify lookup for relational attributes
         self.obj_to_node = {}
@@ -64,7 +71,7 @@ class Scenegraph:
         # iterate over all objects
         for label, obj_list in objs.items():
             for idx, obj in enumerate(obj_list):
-                
+#
                 # label and index jointly unique
                 id = f"{label}_{str(idx)}"
     
@@ -76,14 +83,31 @@ class Scenegraph:
                 # extract absolute and agent-relative attributes
                 obj_attributes = {}
                 obj_agent_relations = {}
+
+                # extract obj properties
+                for prop in self.obj_props:
+                    val = getattr(obj, prop)
+                    # add to graph
+                    obj_attributes[val] = True
+
+                    # add to value store 
+                    self.set_attr_for_id(val, 1, id)
+
+                # add boolean props
+                for prop in self.bool_props:
+                    if getattr(obj, prop):
+                        # add to graph
+                        obj_attributes[prop] = True
+
+                        # add to value store 
+                        self.set_attr_for_id(prop, 1, id)
+
+
     
                 # check if furniture, if yes, connect with agent
                 # and color accordingly
-                obj_attributes["type"] = "object" 
                 color = "blue"
                 if obj.is_furniture():
-                    obj_attributes["type"] =  "furniture"
-
                     # add edge between furniture and agent
                     self.sg.add_edge(id, "Agent", isnear=True)
                     color = "green"
@@ -293,6 +317,12 @@ class Scenegraph:
             raise NotImplementedError(f"Unknown concept_cat: {concept_cat}")
 
         return feature_vector
+
+    def compute_description(self, concept_cat, attr_to_be_described):
+        len_objs = self.attribute_vals.size(1)
+        output = torch.zeros((len_objs,2))
+        output[:,1] = 1
+        return output
         
 
     def render(self, fancy_vis=True, continual_rendering=False):
@@ -335,6 +365,9 @@ class Scenegraph:
         domain = create_bare_domain()
 
         OBJECT = ObjectType("Object")
+        COLOR = ObjectType("Color")
+        domain.define_type(COLOR)
+        domain.define_function(Function("color", FunctionTyping[BOOL](COLOR, OBJECT)))
         
         # create functions for the attributes
         for attr in self.attributes:
@@ -346,6 +379,17 @@ class Scenegraph:
             domain.define_function(Function(rel, FunctionTyping[BOOL](OBJECT,OBJECT)))
 
         return domain
+
+    def _get_all_obj_prop_vals(self, env, obj_props):
+        all_objs = env.objs
+        boolified_props = set()
+        for _, instances in all_objs.items():
+            for instance in instances:
+                for prop in obj_props:
+                    if hasattr(instance, prop):
+                        boolified_props.add(getattr(instance, prop))
+        return boolified_props
+
 
 
 

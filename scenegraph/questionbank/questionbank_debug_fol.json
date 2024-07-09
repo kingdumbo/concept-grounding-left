@@ -1,0 +1,7 @@
+[
+    {
+        "question": "What is the color of the bin in the room?",
+        "answer": "purple",
+        "raw_parsing": "describe(Color, lambda k: color(k, iota(Object, lambda y: bin(y))))"
+    }
+]
