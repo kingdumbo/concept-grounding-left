@@ -71,8 +71,9 @@ def extract_raw_parsings(raw_llm_output_strings):
     return raw_parsings
 
 
-def load_questionbank(path):
+def load_questionbank(filename):
     # return questionbank as object ready for scenegraph oracle
+    path = QUESTIONBANK_DIRECTORY / filename
     d = []
     with open(path, "r") as f:
         print(path)
@@ -80,14 +81,14 @@ def load_questionbank(path):
     return d
 
 
-def raw_parsings_to_questionbank(questionbank, raw_parsings, target_directory):
+def raw_parsings_to_questionbank(questionbank, raw_parsings):
     # write the raw-parsings to the updated question bank
     for i in range(len(questionbank)):
         raw_parsing = raw_parsings[i]
         questionbank[i]["raw_parsing"] = raw_parsing
 
     # write
-    target_path = target_directory / "questionbank_processed.json"
+    target_path = QUESTIONBANK_DIRECTORY / "questionbank_processed.json"
     with open (target_path, "w") as f:
         json.dump(questionbank, f, indent=4)
 
@@ -107,6 +108,14 @@ def process_llm_output(raw_qb_filename = "questionbank_raw.json"):
     raw_outputs, _ = load_text_files(RESULTS_DIRECTORY)
     raw_parsings = extract_raw_parsings(raw_outputs)
     raw_parsings_to_questionbank(questionbank, raw_parsings, QUESTIONBANK_DIRECTORY)
+
+
+def load_system_prompt(filename):
+    # return system prompt template as string
+    path = PROMPTS_DIRECTORY / "templates" / filename
+    with open(path, "r") as f:
+        return f.read()
+    raise Exception()
 
 if __name__ == "__main__":
     preprocess()
