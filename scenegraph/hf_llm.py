@@ -31,7 +31,7 @@ def batch_parse(self, prompts, max_gen_len=64, temperature=0.6,top_p=0.9):
 
 
 def main():
-    if torch.cuda.is_available():
+    if os.getenv("HF_HOME"):
         model_id = "meta-llama/Meta-Llama-3-70B-Instruct"
         local_testing=False
 
@@ -81,12 +81,12 @@ def main():
             temperature=0.6,
             top_p=0.9
         )
-        raw_outputs.append(results[0]["generated_text"])
-        print(f"TASK: {messages[1]['content']}\nSOLUTION: {results[0]['generated_text']}")
+        raw_outputs.append(results[0]["generated_text"][-1]["content"])
+        print(f"TASK: {messages[1]['content']}\nSOLUTION: {results[0]['generated_text'][-1]['content']}")
 
     # extract answers and write to questionbank
     raw_parsings = utils.extract_raw_parsings(raw_outputs)
-    utils.raw_parsings_to_questionbank("questionbank_processed.json", raw_parsings) 
+    utils.raw_parsings_to_questionbank(questionbank, raw_parsings) 
     
     # and print the result
     print("-------------------\nQUESTIONBANK:\n-------------------")
