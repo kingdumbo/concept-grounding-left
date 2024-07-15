@@ -85,7 +85,8 @@ def main():
         print(f"TASK: {messages[1]['content']}\nSOLUTION: {results[0]['generated_text']}")
 
     # extract answers and write to questionbank
-    raw_parsings = utils.extract_raw_parsings(raw_outpus)
+    raw_parsings = utils.extract_raw_parsings(raw_outputs)
+    utils.raw_parsings_to_questionbank("questionbank_processed.json", raw_parsings) 
     
     # and print the result
     print("-------------------\nQUESTIONBANK:\n-------------------")
