@@ -22,6 +22,9 @@ class Scenegraph:
 
         self.env = env
 
+        # set reference to robot
+        self.robot_id = "robot"
+
         # initialize properties of obj e.g. type="blender" to bool blender(x)->bool
         self.bool_props = OBJ_BOOL_PROPS
         self.obj_props = OBJ_PROPS
@@ -30,10 +33,9 @@ class Scenegraph:
         # set types of states
         self.agent_rel_states = AGENT_RELATIVE_STATES
         self.abs_states = ABSOLUTE_STATES
-        self.attributes = [*self.agent_rel_states, *self.abs_states, *all_obj_prop_values, *self.bool_props]
-        breakpoint()
+        self.attributes = {**self.abs_states, **all_obj_prop_values, **self.bool_props, self.robot_id: self.robot_id}
         # TODO include type in attributes (furniture)
-        self.relations = RELATIONS
+        self.relations = {**RELATIONS, **self.agent_rel_states}
 
 
         # to simplify lookup for relational attributes
@@ -55,9 +57,12 @@ class Scenegraph:
         self.reset() # always start from empty graph
 
         # add node for agent
-        self.sg.add_node("Agent")
+        self.sg.add_node(self.robot_id)
         self.sg_color_map.append("red")
-        self.obj_ids.append("Agent")
+        self.obj_ids.append(self.robot_id)
+
+        # create attribute for robot
+        self.set_attr_for_id(self.robot_id, 1, self.robot_id)
 
         # TODO add agent position and orientation
        
@@ -85,7 +90,7 @@ class Scenegraph:
                 obj_agent_relations = {}
 
                 # extract obj properties
-                for prop in self.obj_props:
+                for prop, alias in self.obj_props.items():
                     val = getattr(obj, prop)
                     # add to graph
                     obj_attributes[val] = True
@@ -94,26 +99,25 @@ class Scenegraph:
                     self.set_attr_for_id(val, 1, id)
 
                 # add boolean props
-                for prop in self.bool_props:
+                for prop, alias in self.bool_props.items():
                     if getattr(obj, prop):
                         # add to graph
-                        obj_attributes[prop] = True
+                        obj_attributes[alias] = True
 
                         # add to value store 
-                        self.set_attr_for_id(prop, 1, id)
+                        self.set_attr_for_id(alias, 1, id)
 
 
-    
                 # check if furniture, if yes, connect with agent
                 # and color accordingly
                 color = "blue"
                 if obj.is_furniture():
                     # add edge between furniture and agent
-                    self.sg.add_edge(id, "Agent", isnear=True)
+                    self.sg.add_edge(id, self.robot_id, near=True)
                     color = "green"
 
                     # add to value store 
-                    self.set_attr_for_id("isnear", 1, id)
+                    self.set_attr_for_id("near", 1, id, self.robot_id, symmetric=True)
 
                 self.sg_color_map.append(color)
     
@@ -125,20 +129,22 @@ class Scenegraph:
                         val = state.get_value(self.env)
                         if val is True:
                             # add for graph
-                            obj_agent_relations[attribute] = val
+                            alias = self.agent_rel_states[attribute]
+                            obj_agent_relations[alias] = val
                             
-                            # add to store
-                            self.set_attr_for_id(attribute, 1, id)
+                            # add to store, but as relation
+                            self.set_attr_for_id(alias, 1, id, self.robot_id)
     
                     # otherwise check if absolute attribute
                     elif attribute in self.abs_states:
                         val = state.get_value(self.env)
                         if val is True:
                             # add for graph
-                            obj_attributes[attribute] = val
+                            alias = self.abs_states[attribute]
+                            obj_attributes[alias] = val
 
                             # add to store
-                            self.set_attr_for_id(attribute, 1, id)
+                            self.set_attr_for_id(alias, 1, id)
     
                     # for completeness check if relative, but will be implemented later 
                     elif attribute in self.relations:
@@ -152,7 +158,7 @@ class Scenegraph:
     
                 # add edge to agent if at least one attribute
                 if len(obj_agent_relations.keys()) > 0:
-                    self.sg.add_edge(id, "Agent", **obj_agent_relations)
+                    self.sg.add_edge(id, self.robot_id, **obj_agent_relations)
     
         # SECOND:
         # add relational attributes between objects
@@ -168,17 +174,18 @@ class Scenegraph:
                 relations_obj1_obj2 = {}
     
                 # evaluate all relational attributes 
-                for relation in self.relations:
+                for relation, alias in self.relations.items():
                     try:
                         val = obj1.states[relation].get_value(obj2, self.env)
                         if val is True:
                             # add for graph
-                            relations_obj1_obj2[relation] = val
+                            alias = self.relations[relation]
+                            relations_obj1_obj2[alias] = val
 
                             # add to store
                             obj_id_from = self.obj_to_node[obj1]
                             obj_id_to = self.obj_to_node[obj2]
-                            self.set_attr_for_id(relation, 1, obj_id_from, obj_id_to)
+                            self.set_attr_for_id(alias, 1, obj_id_from, obj_id_to)
                     except:
                         continue
     
@@ -197,7 +204,7 @@ class Scenegraph:
         # iterate over all objects (stored in lists of multiple objects of the same type!)
         for obj in self.env.objs.values():
             num_env_objects += len(obj)
-        num_atts= len(self.attributes)
+        num_atts= len(self.attributes) + 1 # because of robot/agent
         num_rels = len(self.relations)
         self.attribute_vals = torch.zeros((num_atts, num_env_objects))
         self.relation_vals = torch.zeros((num_rels, num_env_objects, num_env_objects))
@@ -220,15 +227,18 @@ class Scenegraph:
         # id of attribute to index on vector of all feature vectors
         # get correct list of attributes to index from
         if not category in ["attribute", "relation"]: raise NotImplementedError("Multi-relation not implemented on graph")
-        attribute_list = getattr(self, f"{category}s")
+        attribute_dict = getattr(self, f"{category}s")
 
         # get index if the name of the attribute as index
-        if not name in attribute_list: raise ValueError(f"{name} not in list of possible {category}s")
+        attr_aliases = list(attribute_dict.values())
+        if not name in attr_aliases: raise ValueError(f"{name} not in list of possible {category}s")
 
-        return attribute_list.index(name)
+        index = attr_aliases.index(name)
+
+        return index
 
 
-    def set_attr_for_id(self, attribute, value, id, id2=None, id3=None):
+    def set_attr_for_id(self, attribute, value, id, id2=None, id3=None, symmetric=False):
         # set attribute value for specific node id and attribute
         # check what category attribute belongs to
         if id2 is None and id3 is None:
@@ -258,6 +268,12 @@ class Scenegraph:
                 attr_id,
                 obj_id_from,
                 obj_id_to] = value
+
+            if symmetric:
+                self.relation_vals[
+                    attr_id,
+                    obj_id_to,
+                    obj_id_from] = value
 
         elif id2 is not None and id3 is not None:
             raise NotImplementedError("Multi-relation not implemented on graph")
@@ -338,6 +354,7 @@ class Scenegraph:
                 title = " | ".join([f"{key}: {value}" for key, value in data.items()])
                 net.add_node(node, title=title, color=color, **data)
 
+            breakpoint()
             # Customize edges to include arbitrary attributes in the title
             for source, target, data in self.sg.edges(data=True):
                 title = " | ".join([f"{key}: {value}" for key, value in data.items()])
@@ -370,24 +387,25 @@ class Scenegraph:
         domain.define_function(Function("color", FunctionTyping[BOOL](COLOR, OBJECT)))
         
         # create functions for the attributes
-        for attr in self.attributes:
+        for attr in self.attributes.values():
             #domain.define_function(Function(f"{attr}_Object", FunctionTyping[BOOL](OBJECT)))
             domain.define_function(Function(attr, FunctionTyping[BOOL](OBJECT)))
 
         # create functions for the relations
-        for rel in self.relations:
+        for rel in self.relations.values():
             domain.define_function(Function(rel, FunctionTyping[BOOL](OBJECT,OBJECT)))
 
         return domain
 
     def _get_all_obj_prop_vals(self, env, obj_props):
         all_objs = env.objs
-        boolified_props = set()
+        boolified_props = {}
         for _, instances in all_objs.items():
             for instance in instances:
                 for prop in obj_props:
                     if hasattr(instance, prop):
-                        boolified_props.add(getattr(instance, prop))
+                        val = getattr(instance, prop)
+                        boolified_props.update({val:val})
         return boolified_props
 
 
