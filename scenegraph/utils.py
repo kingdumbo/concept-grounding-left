@@ -1,6 +1,8 @@
 from pathlib import Path
 import re
 import json
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 BASEBATH = Path(__file__).resolve().parent
 PROMPTS_DIRECTORY = BASEBATH / "prompts"
@@ -80,17 +82,20 @@ def load_questionbank(filename):
         d = json.load(f)
     return d
 
+def save_questionbank(questionbank, filename="questionbank_processed.json"):
+    # write
+    target_path = QUESTIONBANK_DIRECTORY / filename
+    with open (target_path, "w") as f:
+        json.dump(questionbank, f, indent=4)
 
-def raw_parsings_to_questionbank(questionbank, raw_parsings):
+
+def raw_parsings_to_questionbank(questionbank, raw_parsings, filename="questionbank_processed.json"):
     # write the raw-parsings to the updated question bank
     for i in range(len(questionbank)):
         raw_parsing = raw_parsings[i]
         questionbank[i]["raw_parsing"] = raw_parsing
+    save_questionbank(questionbank, filename=filename)
 
-    # write
-    target_path = QUESTIONBANK_DIRECTORY / "questionbank_processed.json"
-    with open (target_path, "w") as f:
-        json.dump(questionbank, f, indent=4)
 
 def preprocess(raw_qb_filename = "questionbank_raw.json"):
     # load questionbank questions and save individually as textfiles with prompt
@@ -100,6 +105,7 @@ def preprocess(raw_qb_filename = "questionbank_raw.json"):
     prompt_template_dir = PROMPTS_DIRECTORY / "templates" 
     prompt_template = "base_with_modifiedexamples.txt"
     build_prompt_files(questionbank, prompt_template_dir, prompt_template, PROMPTS_DIRECTORY) 
+
 
 def process_llm_output(raw_qb_filename = "questionbank_raw.json"):
     # load all response files and use them to update the questionbank
@@ -117,13 +123,89 @@ def load_system_prompt(filename):
         return f.read()
     raise Exception()
 
-if __name__ == "__main__":
-    preprocess()
-    #
-    # HERE WOULD HAPPEN THE LLM MAGIC
-    #
-    process_llm_output()
+def extract_functions_from_string(raw, keep_first=False):
+    # Regular expression to find all sequences of letters longer than 1
+    pattern = r'\b[a-zA-Z]{2,}\b'
+    words = re.findall(pattern, raw) 
+    
+    # remove first word (describe_count, ... = built-int) and lambda 
+    blacklist = ["lambda", "iota", "and", "or", "not", "exists"]
+    idx = 1
+    if keep_first:
+        idx = 0
+    functions = [word for word in words[idx:] if word not in blacklist]
 
-    # for visualization, load and print
-    print(load_questionbank(QUESTIONBANK_DIRECTORY / "questionbank_processed.json"))
+    return functions
+
+def extract_functions_from_domain(domain):
+    funcs = []
+    for type in domain.types.values():
+        funcs.append(str(type))
+    for const in domain.constants.values():
+        funcs.append(str(const))
+    for function in domain.functions.values():
+        func_name = extract_functions_from_string(str(function), keep_first=True)[0]
+        funcs.append(func_name)
+    # remove duplicates
+    funcs = list(set(funcs))
+    return funcs
+
+def correct_parsing(raw_parsing, domain_funcs, verbose=True):
+    parsing_funcs = extract_functions_from_string(raw_parsing)
+    unreplaceable = []
+    corrected_raw_parsing = raw_parsing
+    for func in parsing_funcs:
+        # if already correct, do nothing
+        if func in domain_funcs:
+            continue
+        # else find closest replacement and replace
+        best_match = process.extractOne(func, domain_funcs, scorer=fuzz.token_sort_ratio)
+        if not best_match:
+            unreplaceable.append(func)
+        else:
+            # replace in string
+            best_match = best_match[0]
+            pattern = fr"\b{func}\b"
+            corrected_raw_parsing = re.sub(pattern, best_match, corrected_raw_parsing)
+    if verbose and len(unreplaceable) > 0:
+        print(f"NO CORRECTION for {unreplaceable} IN: {raw_parsing}")
+    return corrected_raw_parsing
+
+
+def correct_parsings(raw_parsings, domain, verbose=True):
+    # extract all from domain
+    domain_funcs = extract_functions_from_domain(domain)
+    
+    corrected_parsings = [correct_parsing(raw, domain_funcs, verbose=verbose) for raw in raw_parsings]
+
+    return corrected_parsings
+
+
+if __name__ == "__main__":
+    # imports
+    import sys
+    sys.path.append("/home/max/uni/LEFT/scenegraph/")
+    from scenegraph import Scenegraph
+    from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
+
+    # get domain
+    env = CleaningUpTheKitchenOnlyEnv()
+    sg = Scenegraph(env)
+    domain = sg.get_domain()
+
+    # get questionbank
+    qb = load_questionbank("questionbank_processed.json")
+    raw_parsings = [q["raw_parsing"] for q in qb]
+
+    # get domain funcs
+    domain_funcs = extract_functions_from_domain(domain)
+
+    # correct and update questionbank
+    for q in qb:
+        q["raw_parsing"] = correct_parsing(q["raw_parsing"], domain_funcs)
+
+    # update
+    save_questionbank(qb, "questionbank_corrected.json")
+
+
 

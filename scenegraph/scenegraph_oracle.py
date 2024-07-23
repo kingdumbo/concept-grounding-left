@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
     # load processed question bank
     from pathlib import Path
-    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_debug_fol.json"
+    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_corrected.json"
     questionbank = load_questionbank(qb_filepath)
 
     oracle = ScenegraphOracle(domain, sg)
