@@ -354,7 +354,6 @@ class Scenegraph:
                 title = " | ".join([f"{key}: {value}" for key, value in data.items()])
                 net.add_node(node, title=title, color=color, **data)
 
-            breakpoint()
             # Customize edges to include arbitrary attributes in the title
             for source, target, data in self.sg.edges(data=True):
                 title = " | ".join([f"{key}: {value}" for key, value in data.items()])

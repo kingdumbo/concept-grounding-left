@@ -129,3 +129,9 @@ if __name__ == "__main__":
     acc = oracle.get_accuracy(output)
     print(acc)
     print(oracle.summarize_output(output, save_to_csv=True, only_false_answers=False).head())
+
+    while True:
+        raw_parsing=input()
+        qa = [{"raw_parsing": raw_parsing, "question":"", "answer": ""}]
+        output = oracle.tell(qa)
+        print(oracle.summarize_output(output, save_to_csv=False, only_false_answers=False).head())
