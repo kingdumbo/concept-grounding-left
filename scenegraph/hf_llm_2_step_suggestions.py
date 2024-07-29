@@ -12,6 +12,8 @@ RESULTS_DIRECTORY = BASEPATH / "results" / "raw"
 
 sys.path.append(BASEPATH)
 import utils
+from scenegraph import Scenegraph
+from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
 
 def batch_parse_n_save(prompts, filenames, max_gen_len, temperature, top_p):
     results = self.batch_parse(prompts, max_gen_len, temperature, top_p)
@@ -59,7 +61,7 @@ def main():
 
     # load prompt files
     initial_prompt = utils.load_system_prompt("system_prompt_2_1.txt")
-    second_prompt = utils.load_system_prompt("system_prompt_2_2.txt")
+    second_prompt = utils.load_system_prompt("system_prompt_2_2_template.txt")
     questionbank = utils.load_questionbank("questionbank_raw.json")
     
     if local_testing:
@@ -73,6 +75,13 @@ def main():
         ] for qb in questionbank]
 
     raw_outputs = []
+
+    # get domain for grounding the prompt
+    env = CleaningUpTheKitchenOnlyEnv()
+    sg = Scenegraph(env)
+    domain = sg.get_domain()
+
+    # run prompts
     for i, messages in enumerate(message_sets):
         # first query produces simplified output
         response = pipeline(
@@ -87,8 +96,10 @@ def main():
         # then get the programm
         simplified = utils.extract_tag_inner(response[0]["generated_text"][-1]["content"], "simplified")
         simplified = f"<simplified>{simplified}</simplified>"
+        top_funcs = print_n_likeliest_funcs(simplified, domain, n=10)
+        modified_system_prompt = second_prompt.format(top_funcs)
         follow_up_messages = [
-                {"role": "system", "content": second_prompt},
+                {"role": "system", "content": modified_system_prompt},
                 {"role": "user", "content": f"<simplified>{simplified}</simplified>"}
         ]
         

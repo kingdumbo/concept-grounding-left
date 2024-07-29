@@ -144,8 +144,7 @@ def extract_functions_from_domain(domain):
     for const in domain.constants.values():
         funcs.append(str(const))
     for function in domain.functions.values():
-        func_name = extract_functions_from_string(str(function), keep_first=True)[0]
-        funcs.append(func_name)
+        funcs.append(function.name)
     # remove duplicates
     funcs = list(set(funcs))
     return funcs
@@ -180,6 +179,49 @@ def correct_parsings(raw_parsings, domain, verbose=True):
 
     return corrected_parsings
 
+def print_n_likeliest_funcs(simplified, domain, n):
+    # get func and signature
+    all_funcs = {}
+    for function in domain.functions.values():
+        name = function.name
+        nr_arguments = function.nr_arguments
+        all_funcs[name] = nr_arguments
+
+    # Store scores
+    scores = []
+    
+    for word in simplified.split():
+        for func_name in all_funcs.keys():
+            score = fuzz.ratio(word, func_name)
+            scores.append((func_name, score))
+    
+    # Sort by score in descending order
+    scores.sort(key=lambda x: x[1], reverse=True)
+    
+    # Remove duplicates, keeping the one with the highest score
+    seen = set()
+    unique_scores = []
+    for func_name, score in scores:
+        if func_name not in seen:
+            seen.add(func_name)
+            unique_scores.append((func_name, score))
+    
+    # Get function signatures
+    return_str = ""
+    for func, _ in unique_scores[:n]:
+        signature = "x" if all_funcs[func] == 1 else "x,y"
+        func_str = f"{func}({signature})\n"
+        return_str += func_str
+
+    print(return_str)
+    return(return_str)
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     # imports
@@ -193,19 +235,25 @@ if __name__ == "__main__":
     sg = Scenegraph(env)
     domain = sg.get_domain()
 
-    # get questionbank
-    qb = load_questionbank("questionbank_processed.json")
-    raw_parsings = [q["raw_parsing"] for q in qb]
+    template_prompt = load_system_prompt("system_prompt_2_2_template.txt")
+    simplified = "exists rag on top of countertop"
+    top_funcs = print_n_likeliest_funcs(simplified, domain, n=10)
+    modified_system_prompt = template_prompt.format(top_funcs)
+    print(modified_system_prompt)
 
-    # get domain funcs
-    domain_funcs = extract_functions_from_domain(domain)
+    ## get questionbank
+    #qb = load_questionbank("questionbank_processed.json")
+    #raw_parsings = [q["raw_parsing"] for q in qb]
 
-    # correct and update questionbank
-    for q in qb:
-        q["raw_parsing"] = correct_parsing(q["raw_parsing"], domain_funcs)
+    ## get domain funcs
+    #domain_funcs = extract_functions_from_domain(domain)
 
-    # update
-    save_questionbank(qb, "questionbank_corrected.json")
+    ## correct and update questionbank
+    #for q in qb:
+    #    q["raw_parsing"] = correct_parsing(q["raw_parsing"], domain_funcs)
+
+    ## update
+    #save_questionbank(qb, "questionbank_corrected.json")
 
 
 

@@ -13,6 +13,8 @@ Now your task is to translate the simplified text inside <simplified></simplifie
 10. other than these specified functions and variables in lambda functions, you should not invent new variables or constants. You also shouldn't use built-in comparison primitives, such as == and >=.
 11. you should make your invented functions as primitive as possible. For example, instead of using white_cat(x), use white(x) and cat(x)
 12. Please make sure that your expression has balanced ( and ).
+13. In addition to using any of pythons built-ins (and, or, ...) and the functions introduced above (count, describe, iota, equal, ...) try to use only functions that are in the following list, although not all have to be used:
+{}
 
 ----
 
