@@ -22,7 +22,7 @@ ABSOLUTE_STATES = {
 
 RELATIONS = {
     "atsamelocation": "atsamelocation",
-    "inside": "in",
+    "inside": "inside",
     "nextto": "nextto",
     "onTop": "ontop",
     "under": "under"

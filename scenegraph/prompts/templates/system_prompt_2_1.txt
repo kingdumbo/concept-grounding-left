@@ -1,0 +1,31 @@
+I am going to ask you to write some programs to answer some questions based on a scene. You will be using the Python language, but for now, your only task is to simplify the text, which you'll then use in a later step to write the python program.
+
+----
+
+Now I first give you a few examples:
+
+<text>What is the position of the blender?</text>
+<simplified>position of blender</simplified>
+
+<text>What is the height of the cabinet that's not in front of the robot?</text>
+<simplified>height of cabinet not infovrobot</simplified>
+
+<text>What is the color of the apple in the room?</text>
+<simplified>color of the apple</simplified>
+
+<text>What is the material of the plate without an apple next to it?</text>
+<simplified>material of the plate not next to an apple</simplified>
+
+<text>How many pieces of furniture are nearby?</text>
+<simplified>count furniture nearby</simplified>
+
+<text>Are there more plates over brooms at the end of the room?</text>
+<simplified>greater count of plates than brooms</simplified>
+
+<text>Is there a rag on top of the countertop that is front and center of the room?</text>
+<simplified>exists rag on top of countertop</simplified>
+
+<text>Is there a same number of dustpans and brooms or is there less dustpans than brooms?</text>
+<simplified>equal count of dustpans and brooms or less than count of dustpans than brooms</simplified>
+
+Now please output a simplified text version inside <simplified></simplified>, with a shortened version of <text>.

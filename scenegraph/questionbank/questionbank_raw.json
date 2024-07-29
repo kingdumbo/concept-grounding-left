@@ -1,5 +1,13 @@
 [
         {
+            "question": "How many robots are there?",
+            "answer": "1"
+        },
+        {
+            "question": "How many things are inside the refrigerator?",
+            "answer": "4"
+        },
+        {
             "question": "How many objects are in front of the robot?",
             "answer": "6"
         },

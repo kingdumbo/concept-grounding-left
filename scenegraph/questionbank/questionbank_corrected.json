@@ -1,13 +1,23 @@
 [
     {
+        "question": "How many robots are there?",
+        "answer": "1",
+        "raw_parsing": "count(Object, lambda y: robot(y))"
+    },
+    {
+        "question": "How many things are inside the refrigerator?",
+        "answer": "4",
+        "raw_parsing": "count(Object, lambda x: inside(x, iota(Object, lambda y: electric_refrigerator(y))))"
+    },
+    {
         "question": "How many objects are in front of the robot?",
         "answer": "6",
-        "raw_parsing": "count(Object, lambda x: infrontof(x, iota(Object, lambda y: robot(y))))"
+        "raw_parsing": "count(Object, lambda x: infront(x, iota(Object, lambda y: robot(y))))"
     },
     {
         "question": "Is there an object in front of the robot, which is also next to another object?",
         "answer": "yes",
-        "raw_parsing": "exists(Object, lambda x: infovrobot(x) and exists(Object, lambda y: nextto(x, y)))"
+        "raw_parsing": "exists(Object, lambda x: infront(x) and exists(Object, lambda y: nextto(x, y)))"
     },
     {
         "question": "Is there a cleaning tool?",
@@ -17,7 +27,7 @@
     {
         "question": "How many stainable things are there, that are also on the floor?",
         "answer": "2",
-        "raw_parsing": "count(Object, lambda x: stainable(x) and on(x, iota(Object, lambda y: floor(y))))"
+        "raw_parsing": "count(Object, lambda x: stainable(x) and brown(x, iota(Object, lambda y: onfloor(y))))"
     },
     {
         "question": "What is the color of the apple in the room?",
