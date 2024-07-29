@@ -68,7 +68,7 @@ def main():
     # transform every question in system prompt - user prompt pair
     message_sets = [
         [
-                {"role": "system", "content": system_prompt},
+                {"role": "system", "content": initial_prompt},
                 {"role": "user", "content": f"<text>{qb['question']}</text>"}
         ] for qb in questionbank]
 
@@ -88,11 +88,14 @@ def main():
         modified_system_prompt_2 = second_prompt
         simplified = utils.extract_tag_inner(response[0]["generated_text"][-1]["content"], "simplified")
         simplified = f"<simplified>{simplified}</simplified>"
-
+        follow_up_messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"<simplified>{simplified}</simplified>"}
+        ]
         
         # append new messages to history
         messages = response[0]["generated_text"]
-        messages.extend((modified_system_prompt_2, simplified))
+        messages.extend(follow_up_messages)
 
         results = pipeline(
             messages,
