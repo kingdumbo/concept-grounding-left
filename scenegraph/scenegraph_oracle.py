@@ -66,8 +66,10 @@ class ScenegraphOracle(LeftModel):
             return "yes" if result.tensor.item() > 0 else "no"
         elif result_typename == "int64":
             return str(int(result.tensor.round().item()))
-        elif result_typename == "Color":
-            return str(result.tensor.argmax().item())
+        elif self.grounding_cls.is_descriptor(result_typename):
+            breakpoint()
+            idx = result.tensor.argmax()
+            return self.grounding_cls.lookup_descriptor(result_typename, idx)
         else:
             raise NotImplementedType(f"Unknown question type: {result_typename}")
 
@@ -127,7 +129,7 @@ if __name__ == "__main__":
 
     # load processed question bank
     from pathlib import Path
-    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_corrected.json"
+    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_debug_fol.json"
     questionbank = load_questionbank(qb_filepath)
 
     oracle = ScenegraphOracle(domain, sg)
