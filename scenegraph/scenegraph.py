@@ -26,6 +26,7 @@ class Scenegraph:
         self.robot_id = "robot"
 
         # initialize properties of obj e.g. type="blender" to bool blender(x)->bool
+        self.descriptor_store = {} # for storing e.g. Color=red for object 5
         self.bool_props = OBJ_BOOL_PROPS
         self.obj_props = OBJ_PROPS
         all_obj_prop_values = self._get_all_obj_prop_vals(env, self.obj_props)
@@ -97,6 +98,10 @@ class Scenegraph:
 
                     # add to value store 
                     self.set_attr_for_id(val, 1, id)
+
+                    # store for description
+                    if self.is_descriptor(prop):
+                        self.set_descriptor_for_id(prop, val, id)
 
                 # add boolean props
                 for prop, alias in self.bool_props.items():
@@ -209,6 +214,13 @@ class Scenegraph:
         self.attribute_vals = torch.zeros((num_atts, num_env_objects))
         self.relation_vals = torch.zeros((num_rels, num_env_objects, num_env_objects))
 
+        # reset storage of descriptors
+        self.descriptor_store = {}
+        _ = self._get_all_obj_prop_vals(self.env, self.obj_props)
+        for key in self.descriptor_store.keys():
+            num_descriptions = len(self.descriptor_store[key]["descriptions"])
+            self.descriptor_store[key]["values"] = torch.zeros((num_env_objects, num_descriptions))
+
         # reset ordering of ids
         self.obj_ids =  []
 
@@ -236,6 +248,17 @@ class Scenegraph:
         index = attr_aliases.index(name)
 
         return index
+
+    def descriptor_to_idx(self, descriptor_category, value):
+        # gets the index of e.g. color=red
+        descriptor_category = descriptor_category.capitalize()
+        if descriptor_category in self.descriptor_store:
+            descriptions = self.descriptor_store[descriptor_category]["descriptions"]
+            if value in descriptions:
+                return descriptions.index(value)
+            raise ValueError(f"{value} is not a value that descriptor {descriptor_category} can take!")
+        else:
+            raise KeyError(f"{descriptor_store} is not a known description category!")
 
 
     def set_attr_for_id(self, attribute, value, id, id2=None, id3=None, symmetric=False):
@@ -281,6 +304,21 @@ class Scenegraph:
         else:
             # if none applies, somethings wrong
             raise LookupError(f"No category for id={id}, id2={id2}, id3={id3}")
+
+    def set_descriptor_for_id(self, descriptor_category, descriptor_value, id):
+        # set color=red for an object identified by id
+        descriptor_category = descriptor_category.capitalize()
+        obj_idx = self.id_to_idx(id)
+        if descriptor_category in self.descriptor_store:
+            descriptions = self.descriptor_store[descriptor_category]["descriptions"]
+            if descriptor_value in descriptions:
+                descript_idx = descriptions.index(descriptor_value)
+                self.descriptor_store[descriptor_category]["values"][obj_idx, descript_idx] = 1
+            else:
+                raise ValueError(f"{descriptor_value} is not in description in category {descriptor_category}")
+        else:
+            raise KeyError(f"{descriptor_category} is not known!")
+
         
     def get_attr_for_id(self, attribute, id, id2=None, id3=None):
         # set attribute value for specific node id and attribute
@@ -320,6 +358,18 @@ class Scenegraph:
             # if none applies, somethings wrong
             raise LookupError(f"No category for id={id}, id2={id2}, id3={id3}")
 
+    def lookup_descriptor(self, descriptor_category, idx):
+        # get the e.g. color at index 7
+        descriptor_category = descriptor_category.capitalize()
+        if descriptor_category in self.descriptor_store:
+            try:
+                return self.descriptor_store[descriptor_category]["descriptions"][idx]
+            except IndexError as e:
+                raise IndexError(f"Index: {idx} doesn't refer to a valid description, is out of bounds")
+        else:
+            raise KeyError(f"{descriptor_categry} not a known description category!")
+
+
     def compute_similarity(self, concept_cat, concept):
         attribute_index = self.attr_to_idx(concept_cat, concept)
         if concept_cat == "attribute":
@@ -335,10 +385,20 @@ class Scenegraph:
         return feature_vector
 
     def compute_description(self, concept_cat, attr_to_be_described):
-        len_objs = self.attribute_vals.size(1)
-        output = torch.zeros((len_objs,2))
-        output[:,1] = 1
-        return output
+        if attr_to_be_described in self.descriptor_store:
+            return self.descriptor_store[attr_to_be_described]["values"]
+        raise KeyError(f"{attr_to_be_described} is not an known categor for description!")
+
+
+    def is_descriptor(self, descriptor):
+        if descriptor.capitalize() in self.descriptor_store:
+            return True
+        if descriptor in self.descriptor_store:
+            return True
+        return False
+
+    def get_descriptions(self):
+        return [key for key in self.descriptor_store.keys()]
         
 
     def render(self, fancy_vis=True, continual_rendering=False):
@@ -381,9 +441,6 @@ class Scenegraph:
         domain = create_bare_domain()
 
         OBJECT = ObjectType("Object")
-        COLOR = ObjectType("Color")
-        domain.define_type(COLOR)
-        domain.define_function(Function("color", FunctionTyping[BOOL](COLOR, OBJECT)))
         
         # create functions for the attributes
         for attr in self.attributes.values():
@@ -393,6 +450,13 @@ class Scenegraph:
         # create functions for the relations
         for rel in self.relations.values():
             domain.define_function(Function(rel, FunctionTyping[BOOL](OBJECT,OBJECT)))
+
+        # Create functions and types for the descriptions
+        for descriptor in self.descriptor_store.keys():
+            lower_case = descriptor.lower()
+            TYPE = ObjectType(descriptor)
+            domain.define_type(TYPE)
+            domain.define_function(Function(lower_case, FunctionTyping[BOOL](TYPE, OBJECT)))
 
         return domain
 
@@ -405,6 +469,17 @@ class Scenegraph:
                     if hasattr(instance, prop):
                         val = getattr(instance, prop)
                         boolified_props.update({val:val})
+                        # store in descriptor_store
+                        prop = prop.capitalize()
+                        if prop in self.descriptor_store:
+                            if "descriptions" in self.descriptor_store[prop]:
+                                if not val in self.descriptor_store[prop]["descriptions"]:
+                                    self.descriptor_store[prop]["descriptions"].append(str(val))
+                            else:
+                                self.descriptor_store[prop]["descriptions"] = [str(val)]
+                        else:
+                            self.descriptor_store[prop] = {"descriptions":[], "values": None}
+                            self.descriptor_store[prop]["descriptions"].append(str(val))
         return boolified_props
 
 
