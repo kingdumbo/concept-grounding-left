@@ -60,6 +60,9 @@ class ScenegraphOracle(LeftModel):
             return "yes" if result.tensor.item() > 0 else "no"
         elif result_typename == "int64":
             return str(int(result.tensor.round().item()))
+        elif result_typename == "Action":
+            idx = result.tensor.argmax()
+            return self.grounding_cls.lookup_action_status(idx)
         elif self.grounding_cls.is_descriptor(result_typename):
             breakpoint()
             idx = result.tensor.argmax()

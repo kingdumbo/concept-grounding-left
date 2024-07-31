@@ -4,6 +4,7 @@ sys.path.append("/home/max/uni/LEFT/")
 sys.path.append("/home/max/uni/LEFT/scenegraph/")
 
 from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS, OBJ_BOOL_PROPS, OBJ_PROPS
+from actor import Actor
 from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
 from concepts.dsl.dsl_functions import Function, FunctionTyping
 from concepts.dsl.dsl_types import ObjectType, BOOL, INT64, Variable
@@ -17,7 +18,6 @@ from livereload import Server
 
 class Scenegraph:
     def __init__(self, env):
-        #JUST TRYING
         self.rendering = False
 
         self.env = env
@@ -53,6 +53,9 @@ class Scenegraph:
         # for FOL executor
         self.training = False
 
+        # for actions
+        self.actor = Actor(self.env)
+
     def update(self):
         state = self.env.get_state()
         self.reset() # always start from empty graph
@@ -85,6 +88,7 @@ class Scenegraph:
                 self.obj_to_node[obj] = id
                 self.node_to_obj[id] = obj
                 self.obj_ids.append(id)
+                self.objs.append(obj)
     
                 # extract absolute and agent-relative attributes
                 obj_attributes = {}
@@ -223,6 +227,7 @@ class Scenegraph:
 
         # reset ordering of ids
         self.obj_ids =  []
+        self.objs = []
 
         # reset lookups
         self.obj_to_node = {}
@@ -233,6 +238,12 @@ class Scenegraph:
         if id in self.obj_ids:
             return self.obj_ids.index(id)
         raise ValueError(f"Unkown node-id: {id}")
+
+    def idx_to_obj(self, idx):
+        try:
+            return self.objs[idx]
+        except IndexError as e:
+            raise IndexError(f"Idx {idx} is out of bounds for objects stored in self.objs")
 
 
     def attr_to_idx(self, category, name):
@@ -369,6 +380,13 @@ class Scenegraph:
         else:
             raise KeyError(f"{descriptor_categry} not a known description category!")
 
+    def lookup_action_status(self, idx):
+        action_statuses = self.actor.get_status_list()
+        try:
+            return action_statuses[idx]
+        except IndexError as e:
+            raise IndexError(f"Index: {idx} doesn't refer to a valid action status, is out of bounds")
+
 
     def compute_similarity(self, concept_cat, concept):
         attribute_index = self.attr_to_idx(concept_cat, concept)
@@ -390,12 +408,31 @@ class Scenegraph:
         raise KeyError(f"{attr_to_be_described} is not an known categor for description!")
 
 
+    def compute_action(self, object_tensor_1, object_tensor_2, action_name):
+            # check if action is valid
+            assert action_name in self.actor.get_actions()
+
+            # get actual object instances to which object_1 and object_2 (if present) refer
+            breakpoint()
+            idx = object_tensor_1.tensor.argmax()
+            object_1 = self.idx_to_obj(idx)
+            object_2 = None
+            
+            if object_tensor_2 is not None:
+                idx_2 = object_tensor_2.tensor.argmax()
+                object_2 = self.idx_to_obj(idx_2)
+
+            # execute action with actor
+            return self.actor.act(action_name, object_1, object_2)
+
+
     def is_descriptor(self, descriptor):
         if descriptor.capitalize() in self.descriptor_store:
             return True
         if descriptor in self.descriptor_store:
             return True
         return False
+
 
     def get_descriptions(self):
         return [key for key in self.descriptor_store.keys()]
@@ -441,6 +478,12 @@ class Scenegraph:
         domain = create_bare_domain()
 
         OBJECT = ObjectType("Object")
+        ACTION = ObjectType("Action")
+        #PICK = ObjectType("Pick")
+        #domain.define_function(Function("pick", FunctionTyping[BOOL](ACTION, OBJECT)))
+        #domain.define_type(PICK)
+        #domain.define_function(Function("pick", FunctionTyping[BOOL](PICK, OBJECT)))
+        domain.define_function(Function("pick", FunctionTyping[BOOL](ACTION, OBJECT)))
         
         # create functions for the attributes
         for attr in self.attributes.values():
