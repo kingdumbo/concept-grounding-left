@@ -317,11 +317,16 @@ class NCGeneralizedFOLExecutor(FunctionDomainExecutor):
                     answer = value.tensor @ answer
                     return TensorValue(expr.return_type, [], answer, quantized=False)
             elif expr.quantification_op == 'execute':
-                assert isinstance(expr.expression, E.FunctionApplicationExpression) and len(expr.expression.arguments) == 3
+                breakpoint()
+                assert isinstance(expr.expression, E.FunctionApplicationExpression)
+                assert len(expr.expression.arguments) == 3 or len(expr.expression.arguments) == 2
                 assert isinstance(expr.expression.arguments[0], E.VariableExpression) and expr.expression.arguments[0].variable.name == expr.variable.name
 
                 object_1 = self._execute(expr.expression.arguments[1])
-                object_2 = self._execute(expr.expression.arguments[2])
+                if len(expr.expression.arguments) == 2:
+                    object_2 = None
+                else:
+                    object_2 = self._execute(expr.expression.arguments[2])
                 return self.grounding.compute_action(object_1, object_2, expr.expression.function.name)
             elif expr.quantification_op == 'count':
                 assert expr.variable.name not in self.variable_stack
