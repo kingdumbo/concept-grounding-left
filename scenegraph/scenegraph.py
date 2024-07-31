@@ -1,7 +1,13 @@
 import sys
-sys.path.append("/home/max/uni/LEFT/Jacinle")
-sys.path.append("/home/max/uni/LEFT/")
-sys.path.append("/home/max/uni/LEFT/scenegraph/")
+import os
+
+# Get the directory of the current file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Append the necessary directories to sys.path
+sys.path.append(os.path.join(current_dir, '..', 'Jacinle'))
+sys.path.append(os.path.join(current_dir, '..'))
+sys.path.append(current_dir)
 
 from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS, OBJ_BOOL_PROPS, OBJ_PROPS
 from actor import Actor
