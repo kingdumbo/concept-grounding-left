@@ -419,7 +419,6 @@ class Scenegraph:
             assert action_name in self.actor.get_actions()
 
             # get actual object instances to which object_1 and object_2 (if present) refer
-            breakpoint()
             idx = object_tensor_1.tensor.argmax()
             object_1 = self.idx_to_obj(idx)
             object_2 = None
@@ -466,13 +465,14 @@ class Scenegraph:
             else:
                 self.html_filename = "network.html"
                 # Save the network visualization to a fixed HTML file
-                net.write_html(self.html_filename, open_browser =False)
+                path = "/home/max/uni/LEFT/network.html"
+                net.write_html(path, open_browser =False)
                 
                 if not self.rendering:
                     import threading
                     self.rendering=True
                     server = Server()
-                    path = "/home/max/uni/LEFT/network.html"
+                    path = path
                     server.watch(path)
                     server_thread = threading.Thread(target=server.serve)
                     server_thread.setDaemon(True)
@@ -485,10 +485,6 @@ class Scenegraph:
 
         OBJECT = ObjectType("Object")
         ACTION = ObjectType("Action")
-        #PICK = ObjectType("Pick")
-        #domain.define_function(Function("pick", FunctionTyping[BOOL](ACTION, OBJECT)))
-        #domain.define_type(PICK)
-        #domain.define_function(Function("pick", FunctionTyping[BOOL](PICK, OBJECT)))
         domain.define_function(Function("pick", FunctionTyping[BOOL](ACTION, OBJECT)))
         
         # create functions for the attributes

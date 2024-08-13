@@ -20,6 +20,7 @@ from left.generalized_fol_parser import NCGeneralizedFOLPythonParser
 import pandas as pd
 
 from mini_behavior.envs import CleaningUpTheKitchenOnlyEnv
+
 class ScenegraphOracle(LeftModel): 
     def __init__(self, domain, scenegraph):
 
@@ -61,7 +62,7 @@ class ScenegraphOracle(LeftModel):
         except:
             if result is None:
                 return ""
-            result_typename = result.dtype
+            result_typename = str(result.dtype)
         if result_typename == "bool":
             return "yes" if result.tensor.item() > 0 else "no"
         elif result_typename == "int64":
@@ -70,11 +71,10 @@ class ScenegraphOracle(LeftModel):
             idx = result.tensor.argmax()
             return self.grounding_cls.lookup_action_status(idx)
         elif self.grounding_cls.is_descriptor(result_typename):
-            breakpoint()
             idx = result.tensor.argmax()
             return self.grounding_cls.lookup_descriptor(result_typename, idx)
         else:
-            raise NotImplementedType(f"Unknown question type: {result_typename}")
+            raise NotImplementedError(f"Unknown question type: {result_typename}")
 
 
     def get_accuracy(self, output_dict):
@@ -123,16 +123,19 @@ class ScenegraphOracle(LeftModel):
         
 
 if __name__ == "__main__":
-    env = CleaningUpTheKitchenOnlyEnv()
+    # env = CleaningUpTheKitchenOnlyEnv()
+    from gym_minigrid.wrappers import *
+    env = gym.make("MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0")
+    env.reset()
     sg = Scenegraph(env)
     sg.update()
-    #sg.render()
+    sg.render()
     domain = sg.get_domain()
     domain.print_summary()
 
     # load processed question bank
     from pathlib import Path
-    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_debug_fol.json"
+    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_processed.json"
     questionbank = load_questionbank(qb_filepath)
 
     oracle = ScenegraphOracle(domain, sg)
@@ -140,6 +143,7 @@ if __name__ == "__main__":
     acc = oracle.get_accuracy(output)
     print(acc)
     print(oracle.summarize_output(output, save_to_csv=True, only_false_answers=False).head())
+    sg.render()
 
     while True:
         raw_parsing=input()

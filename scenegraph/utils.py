@@ -235,6 +235,7 @@ if __name__ == "__main__":
     sg = Scenegraph(env)
     domain = sg.get_domain()
 
+    print(load_system_prompt("system_prompt_2_1.txt"))
     template_prompt = load_system_prompt("system_prompt_2_2_template.txt")
     simplified = "exists rag on top of countertop"
     top_funcs = print_n_likeliest_funcs(simplified, domain, n=10)

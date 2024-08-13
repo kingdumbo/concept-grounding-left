@@ -17,7 +17,7 @@ from typing import Optional, Sequence, Tuple, List, Dict
 
 import concepts.dsl.expression as E
 
-from concepts.dsl.dsl_types import BOOL, INT64, Variable
+from concepts.dsl.dsl_types import BOOL, INT64, Variable, ObjectType
 from concepts.dsl.tensor_value import TensorValue
 from concepts.dsl.function_domain import FunctionDomain
 from concepts.dsl.parsers.parser_base import ParserBase
@@ -167,6 +167,7 @@ class NCGeneralizedFOLExecutor(FunctionDomainExecutor):
                 else:
                     assert len(args) == 3
                     grounding_tensor = self.grounding.compute_similarity('multi_relation', expr.function.name)
+                grounding_tensor = grounding_tensor * 10
 
                 print(f"{len(args)} - {expr.function.name} - {grounding_tensor.shape}")
                 # e.g., temporal shift
@@ -183,7 +184,8 @@ class NCGeneralizedFOLExecutor(FunctionDomainExecutor):
                     else:
                         assert isinstance(arg, TensorValue)
                         if not shift:
-                            grounding_tensor = (grounding_tensor * jactorch.add_dim_as_except(arg.tensor, grounding_tensor, i)).sum(i, keepdim=True)
+                            grounding_tensor = (grounding_tensor * jactorch.add_dim_as_except(arg.tensor, grounding_tensor, i))
+                            grounding_tensor = grounding_tensor.sum(i, keepdim=True)
                             dims_to_squeeze.append(i)
 
                 for dim in reversed(dims_to_squeeze):
@@ -317,7 +319,6 @@ class NCGeneralizedFOLExecutor(FunctionDomainExecutor):
                     answer = value.tensor @ answer
                     return TensorValue(expr.return_type, [], answer, quantized=False)
             elif expr.quantification_op == 'execute':
-                breakpoint()
                 assert isinstance(expr.expression, E.FunctionApplicationExpression)
                 assert len(expr.expression.arguments) == 3 or len(expr.expression.arguments) == 2
                 assert isinstance(expr.expression.arguments[0], E.VariableExpression) and expr.expression.arguments[0].variable.name == expr.variable.name
@@ -327,7 +328,9 @@ class NCGeneralizedFOLExecutor(FunctionDomainExecutor):
                     object_2 = None
                 else:
                     object_2 = self._execute(expr.expression.arguments[2])
-                return self.grounding.compute_action(object_1, object_2, expr.expression.function.name)
+                answer = self.grounding.compute_action(object_1, object_2, expr.expression.function.name)
+                return TensorValue(ObjectType("Action"), [], answer, quantized=False)
+
             elif expr.quantification_op == 'count':
                 assert expr.variable.name not in self.variable_stack
                 self.variable_stack[expr.variable.name] = expr.variable

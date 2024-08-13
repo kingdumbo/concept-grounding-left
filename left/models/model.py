@@ -178,7 +178,7 @@ class LeftModel(nn.Module):
                             trace = trace_getter.get()
                     else:
                         execution = self.executor.execute(program)
-                except (KeyError, AttributeError) as e:
+                except (KeyError, AttributeError, AssertionError) as e:
                     logger.exception('Execution failed for question: {}\nProgram: {}.'.format(question, program))
                     raise ExecutionFailed('Execution failed for question: {}\nProgram: {}.'.format(question, program)) from e
             except ExecutionFailed as e:
