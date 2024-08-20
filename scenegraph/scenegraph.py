@@ -61,6 +61,9 @@ class Scenegraph:
 
         # for actions
         self.actor = Actor(self.env)
+        self.mission = self.env.gen_full_obs()["mission"]
+        self.current_reward = 0
+        self.task_done = False
 
     def update(self):
         state = self.env.get_state()
@@ -70,6 +73,7 @@ class Scenegraph:
         self.sg.add_node(self.robot_id)
         self.sg_color_map.append("red")
         self.obj_ids.append(self.robot_id)
+        self.objs.append(None)
 
         # create attribute for robot
         self.set_attr_for_id(self.robot_id, 1, self.robot_id)
@@ -82,6 +86,7 @@ class Scenegraph:
         
         # get objects (including furniture and other objects)
         objs = state["objs"]
+        objs = self.env.objs
     
         # iterate over all objects
         for label, obj_list in objs.items():
@@ -128,11 +133,11 @@ class Scenegraph:
                 color = "blue"
                 if obj.is_furniture():
                     # add edge between furniture and agent
-                    self.sg.add_edge(id, self.robot_id, near=True)
+                    #self.sg.add_edge(id, self.robot_id, near=True)
                     color = "green"
 
                     # add to value store 
-                    self.set_attr_for_id("near", 1, id, self.robot_id, symmetric=True)
+                    #self.set_attr_for_id("near", 1, id, self.robot_id, symmetric=True)
 
                 self.sg_color_map.append(color)
     
@@ -142,10 +147,10 @@ class Scenegraph:
                     # NOTE: agent relative attributes are treated as essentially absolute attributes of the object
                     if attribute in self.agent_rel_states:
                         val = state.get_value(self.env)
-                        if val is True:
+                        if val:
                             # add for graph
                             alias = self.agent_rel_states[attribute]
-                            obj_agent_relations[alias] = val
+                            obj_agent_relations[alias] = True
                             
                             # add to store, but as relation
                             self.set_attr_for_id(alias, 1, id, self.robot_id)
@@ -153,10 +158,10 @@ class Scenegraph:
                     # otherwise check if absolute attribute
                     elif attribute in self.abs_states:
                         val = state.get_value(self.env)
-                        if val is True:
+                        if val:
                             # add for graph
                             alias = self.abs_states[attribute]
-                            obj_attributes[alias] = val
+                            obj_attributes[alias] = True
 
                             # add to store
                             self.set_attr_for_id(alias, 1, id)
@@ -192,10 +197,10 @@ class Scenegraph:
                 for relation, alias in self.relations.items():
                     try:
                         val = obj1.states[relation].get_value(obj2, self.env)
-                        if val is True:
+                        if val:
                             # add for graph
                             alias = self.relations[relation]
-                            relations_obj1_obj2[alias] = val
+                            relations_obj1_obj2[alias] = True
 
                             # add to store
                             obj_id_from = self.obj_to_node[obj1]
@@ -239,6 +244,10 @@ class Scenegraph:
         self.obj_to_node = {}
         self.node_to_obj = {}
 
+        # reset action relevant things
+        self.mission = self.env.gen_full_obs()["mission"]
+        self.current_reward = 0
+        self.tas_done = False
 
     def id_to_idx(self, id):
         if id in self.obj_ids:
@@ -415,20 +424,23 @@ class Scenegraph:
 
 
     def compute_action(self, object_tensor_1, object_tensor_2, action_name):
-            # check if action is valid
-            assert action_name in self.actor.get_actions()
+        # check if action is valid
+        assert action_name in self.actor.get_actions()
 
-            # get actual object instances to which object_1 and object_2 (if present) refer
-            idx = object_tensor_1.tensor.argmax()
-            object_1 = self.idx_to_obj(idx)
-            object_2 = None
-            
-            if object_tensor_2 is not None:
-                idx_2 = object_tensor_2.tensor.argmax()
-                object_2 = self.idx_to_obj(idx_2)
+        # get actual object instances to which object_1 and object_2 (if present) refer
+        idx = object_tensor_1.tensor.argmax()
+        object_1 = self.idx_to_obj(idx)
+        object_2 = None
+        
+        if object_tensor_2 is not None:
+            idx_2 = object_tensor_2.tensor.argmax()
+            object_2 = self.idx_to_obj(idx_2)
 
-            # execute action with actor
-            return self.actor.act(action_name, object_1, object_2)
+        # execute action with actor
+        result, reward, done =  self.actor.act(action_name, object_1, object_2)
+        self.current_reward = reward
+        self.task_done = done
+        return result
 
 
     def is_descriptor(self, descriptor):
@@ -485,7 +497,10 @@ class Scenegraph:
 
         OBJECT = ObjectType("Object")
         ACTION = ObjectType("Action")
+
+        # add ations manually
         domain.define_function(Function("pick", FunctionTyping[BOOL](ACTION, OBJECT)))
+        domain.define_function(Function("place", FunctionTyping[BOOL](ACTION, OBJECT)))
         
         # create functions for the attributes
         for attr in self.attributes.values():
@@ -526,6 +541,12 @@ class Scenegraph:
                             self.descriptor_store[prop] = {"descriptions":[], "values": None}
                             self.descriptor_store[prop]["descriptions"].append(str(val))
         return boolified_props
+
+    def get_reward_n_done(self):
+        return self.current_reward, self.task_done
+    
+    def get_mission(self):
+        return self.mission
 
 
 

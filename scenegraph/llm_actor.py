@@ -11,6 +11,7 @@ sys.path.append(current_dir)
 
 from scenegraph import Scenegraph
 from scenegraph_oracle import ScenegraphOracle
+from gpt_prompting import PromptingOpenAI
 from utils import load_questionbank
 import pandas as pd
 from gym_minigrid.wrappers import *
@@ -42,6 +43,17 @@ class LlmActor:
 
         # mission
         self.mission = self.env.mission
+        self.reward = 0
+        self.task_done = False
+
+        # the llm
+        self.llm = PromptingOpenAI(
+            high_level_prompt_filename="system_prompt_high_level.txt",
+            initial_prompt_filename="system_prompt_actions_1.txt",
+            second_prompt_template_filename="system_prompt_actions_2.txt",
+            domain=self.domain
+        )
+
         self.reset()
 
     def reset(self):
@@ -67,7 +79,7 @@ class LlmActor:
         self.window.show(block=False)
         
 
-    def execute(self, command):
+    def _execute_raw_parsing(self, command):
         try:
             if not isinstance(command, list):
                 command = [command]
@@ -77,10 +89,45 @@ class LlmActor:
                 self.sg.render(continual_rendering=True)
                 self._redraw()
             output = output["pred_answer"][0]
-            return output
+            self.reward, self.task_done = self.sg.get_reward_n_done()
+            return output, self.reward, self.task_done
         except Exception as e:
             raise e
             
+    def execute_step(self, command_string):
+        question_dict = {
+            "question": command_string,
+            "answer": "Success"
+        }
+        # first get raw_parsing
+        raw_parsing = self.llm.to_raw_parsing(command_string)
+        question_dict["raw_parsing"] = raw_parsing
+
+        # then execute
+        output, reward, done = self._execute_raw_parsing(question_dict)
+        print(f"{command_string} - {raw_parsing} - {output}")
+
+        return output, reward, done
+
+    def execute_task(self, task_description, max_re_plans=1, max_steps = 5):
+        # generate initial plan
+        plan = self.llm.generate_plan(task_description)
+        print(plan)
+
+        # execute until failure
+        num_replans = 0
+        num_steps = 0
+        done = False
+        while num_replans < max_re_plans and num_steps < max_steps and not done:
+            for step in plan:
+                output, reward, done = self.execute_step(step)
+                num_steps += 1
+                if output != "Success":
+                    plan = self.llm.update_plan(step, output) 
+                    num_replans += 1
+                    break
+            done = True
+
 
     def _redraw(self):
         img = self.env.render('rgb_array', tile_size=TILE_PIXELS)
@@ -92,12 +139,6 @@ if __name__ == "__main__":
     env_string = "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
     llm_actor = LlmActor(env_string)
     llm_actor.start_render()
-    commands = [{
-        "question": "Pick up the broom.",
-        "answer": "Success",
-        "raw_parsing": "execute(Action, lambda k: pick(k, iota(Object, lambda y: broom(y))))"
-    }]
-    for command in commands:
-        input()
-        print(llm_actor.execute(command))
+    input()
+    llm_actor.execute_task("The broom needs to be placed inside the cabinet.", max_steps = 3, max_re_plans=1)
     input()

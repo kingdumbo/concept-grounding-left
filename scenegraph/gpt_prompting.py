@@ -17,82 +17,62 @@ import utils
 from scenegraph import Scenegraph
 from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
 
-# set openai key
-load_dotenv(find_dotenv())
-client = OpenAI()
 
-def batch_parse_n_save(prompts, filenames, max_gen_len, temperature, top_p):
-    results = self.batch_parse(prompts, max_gen_len, temperature, top_p)
-    results = [json.dumps(result) for result in results]
-    utils.write_text_files(results, filenames, RESULTS_DIRECTORY)
+CONFIG = {
+    "model":"gpt-4o",
+    "max_tokens": 256,
+    "temperature": 1,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0,
+    "response_format": {"type": "text"}
+}
+class PromptingOpenAI:
+    def __init__(self, high_level_prompt_filename, initial_prompt_filename, second_prompt_template_filename, domain, config=CONFIG,):
+        self.domain = domain
+        load_dotenv(find_dotenv())
+        self.client = OpenAI()
+        self.config = config
 
+        # load prompts
+        self.high_level_prompt = utils.load_system_prompt(high_level_prompt_filename)
+        self.initial_prompt = utils.load_system_prompt(initial_prompt_filename)
+        self.second_prompt_template = utils.load_system_prompt(second_prompt_template_filename)
 
-def batch_parse(self, prompts, max_gen_len=64, temperature=0.6,top_p=0.9):
-    results = self.generator.text_completion(
-        prompts,
-        max_gen_len=max_gen_len,
-        temperature=temperature,
-        top_p=top_p,
-    )
-    return results
+        # high level prompt needs to maintain history:
+        self.history = None
 
+    def _execute(self, messages, config=None):
+        if config is None:
+            config = self.config
 
-def main():
-    # preprocesses
-    utils.preprocess()
-
-    # load prompt files
-    initial_prompt = utils.load_system_prompt("system_prompt_2_1.txt")
-    second_prompt = utils.load_system_prompt("system_prompt_2_2_template.txt")
-    questionbank = utils.load_questionbank("questionbank_raw.json")
-    
-    local_testing = False
-    # local_testing = True
-    if local_testing:
-        questionbank = [questionbank[0]]
-
-    # transform every question in system prompt - user prompt pair
-    message_sets = [
-        [
-                {"role": "system", "content": initial_prompt},
-                {"role": "user", "content": f"<text>{qb['question']}</text>"}
-        ] for qb in questionbank]
-
-    raw_outputs = []
-
-    # get domain for grounding the prompt
-    env = CleaningUpTheKitchenOnlyEnv()
-    sg = Scenegraph(env)
-    domain = sg.get_domain()
-
-    # run prompts
-    for i, messages in enumerate(message_sets):
-   # first query produces simplified output
-        #model = "gpt-4o-mini"
-        model = "gpt-4o"
-        max_tokens = 256
-        temperature = 1
-        top_p = 1
-        frequency_penalty = 0
-        presence_penalty = 0
-        response_format = {"type": "text"}
-
-        response = client.chat.completions.create(
-            model=model,
+        response = self.client.chat.completions.create(
+            model=config["model"],
             messages=messages,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            frequency_penalty=frequency_penalty,
-            presence_penalty=presence_penalty,
-            response_format=response_format
+            max_tokens=config["max_tokens"],
+            temperature=config["temperature"],
+            top_p=config["top_p"],
+            frequency_penalty=config["frequency_penalty"],
+            presence_penalty=config["presence_penalty"],
+            response_format=config["response_format"]
         )
+        return response
+
+    def to_raw_parsing(self, message):
+        # transform every question in system prompt - user prompt pair
+        messages = [
+                    {"role": "system", "content": self.initial_prompt},
+                    {"role": "user", "content": f"<text>{message}</text>"}
+        ]
+
+        # first query produces simplified output
+        response = self._execute(messages)
 
         # then get the programm
-        simplified = utils.extract_tag_inner(response.choices[0].message.content, "simplified")
+        simplified = utils.extract_tag_inner(response.choices[0].message.content, "simplified")[0]
         simplified = f"<simplified>{simplified}</simplified>"
-        top_funcs = utils.print_n_likeliest_funcs(simplified, domain, n=10)
-        modified_system_prompt = second_prompt.format(top_funcs)
+        top_funcs = utils.get_n_likeliest_funcs(simplified, self.domain, n=10)
+        modified_system_prompt = self.second_prompt_template.format(top_funcs)
         follow_up_messages = [
                 {"role": "system", "content": modified_system_prompt},
                 {"role": "user", "content": f"<simplified>{simplified}</simplified>"}
@@ -101,25 +81,93 @@ def main():
         # append new messages to history
         messages.extend(follow_up_messages)
 
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            frequency_penalty=frequency_penalty,
-            presence_penalty=presence_penalty,
-            response_format=response_format
-        )
+        # get code
+        response = self._execute(messages)
 
-        raw_outputs.append(response.choices[0].message.content)
-        # print(f"TASK: {messages[1]['content']}\nSOLUTION: {results[0]['generated_text'][-1]['content']}")
-        # print(raw_outputs)
+        # extract and return
+        raw_parsing = utils.extract_raw_parsing(response.choices[0].message.content)
+        return raw_parsing
 
-    # extract answers and write to questionbank
-    raw_parsings = utils.extract_raw_parsings(raw_outputs)
-    utils.raw_parsings_to_questionbank(questionbank, raw_parsings) 
+    def generate_plan(self, high_level_task):
+        # include system prompt with high level prompt
+        messages = [
+                    {"role": "system", "content": self.high_level_prompt},
+                    {"role": "user", "content": f"<task>{high_level_task}</task>"}
+        ]
+
+        # get initial plan
+        response = self._execute(messages)
+        self.history = response
+
+        # extract and return plan as list
+        plan = self._extract_plan(response)
+
+        return plan
+
+    def update_plan(self, error_step, output):
+        # build update prompt
+        update_prompt = f'''An error was encountered by the robot executing the plan!
+        Step: {error_step}
+        Output: {output}'''
+        update_message = [{"role": "user", "content": update_prompt}]
+        self.history.extend(update_message)
+
+        # extract updated plan
+        response = self._execute(self.history)
+        self.history = response
+
+        plan = self._extract_plan(response)
+
+        return plan
+        
+    def _extract_plan(self, response):
+        plans = utils.extract_tag_inner(response.choices[0].message.content, "step")
+        return plans
+
+
+def main():
+    # preprocesses
+    utils.preprocess()
+
+    # load questionbanks
+    questionbank_raw_name = "questionbank_raw.json"
+    questionbank_processed_name = "questionbank_processed.json"
+    questionbank = utils.load_questionbank(questionbank_raw_name)
     
+    # get domain for grounding the prompt
+    env = CleaningUpTheKitchenOnlyEnv()
+    sg = Scenegraph(env)
+    domain = sg.get_domain()
+    local_testing = False
+
+    # local_testing = True
+    if local_testing:
+        questionbank = [questionbank[0]]
+
+    # init client
+    config = {
+        "model":"gpt-4o-mini",
+        "max_tokens": 256,
+        "temperature": 1,
+        "top_p": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "response_format": {"type": "text"}
+    }
+
+    llm_client = PromptingOpenAI(
+        initial_prompt_filename="system_prompt_2_1.txt",
+        second_prompt_template_filename="system_prompt_2_2_template.txt",
+        config=config,
+        domain=domain
+    )
+
+    # update question bank with raw parsing per question
+    updated_questionbank = [{**qb, "raw_parsing": llm_client.to_raw_parsing(qb["question"])} for qb in questionbank]
+    
+    # save result
+    utils.save_questionbank(updated_questionbank, questionbank_processed_name)
+
     # and print the result
     print("-------------------\nQUESTIONBANK:\n-------------------")
     print(utils.load_questionbank("questionbank_processed.json"))
