@@ -1,0 +1,59 @@
+Now your task is to translate the simplified text inside <simplified></simplified>. You will be using the Python language, but you should only use the following features:
+
+1. to classify whether an object has a certain property, use cat(x), where cat is the property you want to test, and x is a variable.
+2. to classify whether two objects have a certain property, use on(x, y).
+3. you can use and, or, not Boolean operations based on these classification results. For example, cat(x) and lawn(y) and on(x, y)
+4. when you want to select an object based on a property that this object should have, use iota(Object, lambda x: cat(x)) (selects the only cat in the scene).
+5. when you want to check whether there exists a cat in the scene, use exists(Object, lambda x: cat(x)).
+6. when you want to count the number of cats in a scene, use count(Object, lambda x: cat(x))
+7. if you want to query the property of an object, for example, the color of a cat, use the following program: describe(Color, lambda x: color(x, iota(Object, lambda y: cat(y)))). Think of it as retrieving the index of the color with the inner use of color and then converting it into human-readable output by passing it to the translator function describe, which looks up the answer in the Color table.
+8: describe can only be used as the outermost function. If you want to compare a property between two objects, use same_color(x, y).
+9. there are also three built-in operations for number comparisons: equal, less_than, and greater_than.
+10. if you want to compare whether two objects are the same object, use same_object(x, y)
+10. other than these specified functions and variables in lambda functions, you should not invent new variables or constants. You also shouldn't use built-in comparison primitives, such as == and >=.
+11. you should make your invented functions as primitive as possible. For example, instead of using white_cat(x), use white(x) and cat(x)
+12. Please make sure that your expression has balanced ( and ).
+13. when you want to execute any kind of action, use execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y)))). 
+14. if you want to pick up on object, use pick(...)
+15. if you want to place an object, that you are already carrying, use place(...). You specify the target object, where you want to place it. Make no distinction between placing things on, inside, next to this object. For example, to place a carried object inside the fridge, use execute(Action, lambda x: place(x, iota(Object, lambda y: electric_refrigerator(y))))
+16. In addition to using any of pythons built-ins (and, or, ...) and the functions introduced above (count, describe, iota, equal, ...) try to use only functions that are in the following list, although not all have to be used:
+{}
+
+----
+
+Now I first give you a few examples:
+
+<simplified>position of blender</simplified>
+<code>describe(Position, lambda x: position(x, iota(Object, lambda y: blender(y))))</code>
+
+<simplified>height of cabinet not infovrobot</simplified>
+<code>describe(Height, lambda x: height(x, iota(Object, lambda y: cabinet(y) and not(infovrobot(y)))))</code>
+
+<simplified>color of the apple</simplified>
+<code>describe(Color, lambda x: color(x, iota(Object, lambda y: apple(y))))</code>
+
+<simplified>material of the plate not next to an apple</simplified>
+<code>describe(Material, lambda x: material(x, iota(Object, lambda y: plate(y) and not(nextto(y, iota(Object, lambda z: apple(z)))))))</code>
+
+<simplified>count furniture nearby</simplified>
+<code>count(Object, lambda x: iota(Object, lambda y: furniture(y)), x)</code>
+
+<simplified>exists rag on top of countertop</simplified>
+<code>exists(Object, lambda x: rag(x) and onTop(x, iota(Object, lambda y: countertop(y))))</code>
+
+<simplified>pick broom at same location as cabinet</simplified>
+<code>execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and atsamelocation(y, iota(Object, lambda z: cabinet(z))))))</code>
+
+<simplified>pick plate inside refrigerator</simplified>
+<code>execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))</code>
+
+<simplified>place countertop</simplified>
+<code>execute(Action, lambda x: place(x, iota(Object, lambda y: countertop(y))))</code>
+
+<simplified>place blue sink on floor</simplified>
+<code>execute(Action, lambda x: place(x, iota(Object, lambda y: sink(y) and blue(y) and onfloor(y))))</code>
+
+<simplified>place openable cabinet</simplified>
+<code>execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and openable(y))))</code>
+
+Now please translate the following simplified text into a program, using ONLY the simplified text, without looking at the original text. Output a short translated program inside <code></code>.
