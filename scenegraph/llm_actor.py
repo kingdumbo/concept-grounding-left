@@ -30,7 +30,7 @@ class LlmActor:
         self.env = gym.make(environment_string)
 
         # init scenegraph
-        self.sg = Scenegraph(self.env)
+        self.sg = Scenegraph(self.env, self)
         self.sg.update()
 
         # get domain and init oracle
@@ -141,4 +141,9 @@ if __name__ == "__main__":
     llm_actor.start_render()
     input()
     llm_actor.execute_task("The broom needs to be placed inside the cabinet.", max_steps = 3, max_re_plans=1)
+    ##input()
+    #command = {"question": "Pick up the broom.",
+    #      "answer": "Success",
+    #      "raw_parsing": "execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y))))"}
+    #llm_actor._execute_raw_parsing(command)
     input()

@@ -63,15 +63,16 @@ def build_prompt_files(questionbank, template_file_directory, template_file_name
 def extract_raw_parsings(raw_llm_output_strings):
     raw_parsings = []
     for i, output in enumerate(raw_llm_output_strings):
-        raw_parsing = ""
-        try:
-            raw_parsing = extract_tag_inner(output, "code")[0]
-        except Exception as e:
-            print(f"No code found at id {i} for raw output: {output}")
-        raw_parsings.append(raw_parsing)
-
+        raw_parsings.append(extract_raw_parsing(output))
     return raw_parsings
 
+def extract_raw_parsing(output):
+    raw_parsing = ""
+    try:
+        raw_parsing = extract_tag_inner(output, "code")[0]
+    except Exception as e:
+        print(f"No code found at id {i} for raw output: {output}")
+    return raw_parsing
 
 def load_questionbank(filename):
     # return questionbank as object ready for scenegraph oracle
@@ -179,7 +180,7 @@ def correct_parsings(raw_parsings, domain, verbose=True):
 
     return corrected_parsings
 
-def print_n_likeliest_funcs(simplified, domain, n):
+def get_n_likeliest_funcs(simplified, domain, n):
     # get func and signature
     all_funcs = {}
     for function in domain.functions.values():
@@ -213,7 +214,6 @@ def print_n_likeliest_funcs(simplified, domain, n):
         func_str = f"{func}({signature})\n"
         return_str += func_str
 
-    print(return_str)
     return(return_str)
 
 

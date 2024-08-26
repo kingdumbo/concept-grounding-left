@@ -23,7 +23,7 @@ import torch
 from livereload import Server
 
 class Scenegraph:
-    def __init__(self, env):
+    def __init__(self, env, renderer=None):
         self.rendering = False
 
         self.env = env
@@ -60,7 +60,7 @@ class Scenegraph:
         self.training = False
 
         # for actions
-        self.actor = Actor(self.env)
+        self.actor = Actor(self.env, renderer)
         self.mission = self.env.gen_full_obs()["mission"]
         self.current_reward = 0
         self.task_done = False
