@@ -17,6 +17,8 @@ import pandas as pd
 from gym_minigrid.wrappers import *
 from mini_behavior.envs import CleaningUpTheKitchenOnlyEnv
 from mini_behavior.window import Window
+import yaml
+import wandb
 
 # Size in pixels of a tile in the full-scale human view
 TILE_PIXELS = 32
@@ -51,7 +53,7 @@ class LlmActor:
             high_level_prompt_filename="system_prompt_high_level.txt",
             initial_prompt_filename="system_prompt_actions_1.txt",
             second_prompt_template_filename="system_prompt_actions_2.txt",
-            domain=self.domain
+            scenegraph=self.sg
         )
 
         self.reset()
@@ -64,9 +66,8 @@ class LlmActor:
         self.sg.update()
         
         # reset mission
-        if hasattr(self.env, 'mission'):
-            print('Mission: %s' % self.env.mission)
-            self.window.set_caption(self.env.mission)
+        self.mission = ""
+        self.current_step = ""
 
         # reset window
         if self.render:
@@ -106,13 +107,23 @@ class LlmActor:
         # then execute
         output, reward, done = self._execute_raw_parsing(question_dict)
         print(f"{command_string} - {raw_parsing} - {output}")
+        wandb.log({
+            "command": command_string,
+            "raw_parsing": raw_parsing,
+            "output": output,
+            "reward": reward,
+            "task_done": done
+        })
 
         return output, reward, done
 
     def execute_task(self, task_description, max_re_plans=1, max_steps = 5):
         # generate initial plan
+        self.mission = task_description
         plan = self.llm.generate_plan(task_description)
-        print(plan)
+        print("PLAN:")
+        for i, step in enumerate(plan):
+            print(f"{i+1}. {step}")
 
         # execute until failure
         num_replans = 0
@@ -120,13 +131,18 @@ class LlmActor:
         done = False
         while num_replans < max_re_plans and num_steps < max_steps and not done:
             for step in plan:
+                self.current_step = step
                 output, reward, done = self.execute_step(step)
                 num_steps += 1
                 if output != "Success":
+                    print("FAILURE: Step not sucessful, aborting task.")
+                    wandb.log({"result": "FAILURE - Step not successful, aborting task."})
+                    return None
                     plan = self.llm.update_plan(step, output) 
                     num_replans += 1
                     break
             done = True
+        wandb.log({"result": "SUCCESS - All steps successfully executed."})
 
 
     def _redraw(self):
@@ -134,16 +150,26 @@ class LlmActor:
         self.window.no_closeup()
         self.window.set_inventory(self.env)
         self.window.show_img(img)
+        self.window.set_caption(f"STEP: {self.current_step}")
+        self.window.fig.suptitle(f"TASK: {self.mission}")
+
+def parse_yaml(filename):
+    path = str(current_dir) + "/" + filename
+    with open(path, "r") as file:
+        return yaml.safe_load(file)
 
 if __name__ == "__main__":
-    env_string = "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-    llm_actor = LlmActor(env_string)
-    llm_actor.start_render()
-    input()
-    llm_actor.execute_task("The broom needs to be placed inside the cabinet.", max_steps = 3, max_re_plans=1)
-    ##input()
-    #command = {"question": "Pick up the broom.",
-    #      "answer": "Success",
-    #      "raw_parsing": "execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y))))"}
-    #llm_actor._execute_raw_parsing(command)
-    input()
+    wandb.init(
+        project="Concept Grounding",
+        
+    )
+    # load tasks
+    tasks = parse_yaml("high_level_tasks.yaml")
+    for task in tasks:
+        print("TASK: " + task["mission"])
+        env_string = task["env"]
+        wandb.log({"env": env_string, "mission": task["mission"]})
+        llm_actor = LlmActor(env_string)
+        llm_actor.start_render()
+        llm_actor.execute_task(task["mission"], max_steps = task["max_steps"])
+        input()

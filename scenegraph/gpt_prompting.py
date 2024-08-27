@@ -28,8 +28,9 @@ CONFIG = {
     "response_format": {"type": "text"}
 }
 class PromptingOpenAI:
-    def __init__(self, high_level_prompt_filename, initial_prompt_filename, second_prompt_template_filename, domain, config=CONFIG,):
-        self.domain = domain
+    def __init__(self, high_level_prompt_filename, initial_prompt_filename, second_prompt_template_filename, scenegraph, config=CONFIG,):
+        self.sg = scenegraph
+        self.domain = self.sg.get_domain()
         load_dotenv(find_dotenv())
         self.client = OpenAI()
         self.config = config
@@ -42,12 +43,16 @@ class PromptingOpenAI:
         # high level prompt needs to maintain history:
         self.history = None
 
-    def _execute(self, messages, config=None):
+    def _execute(self, messages, config=None, big_guns=False):
         if config is None:
             config = self.config
 
+        model = config["model"]
+        if big_guns:
+            model = "gpt-4o"
+
         response = self.client.chat.completions.create(
-            model=config["model"],
+            model=model,
             messages=messages,
             max_tokens=config["max_tokens"],
             temperature=config["temperature"],
@@ -89,14 +94,18 @@ class PromptingOpenAI:
         return raw_parsing
 
     def generate_plan(self, high_level_task):
+        # generate a scene summary to include with the prompt
+        scene_summary = self.sg.get_summary()
+        high_level_prompt_modified = self.high_level_prompt.format(scene_summary)
+        
         # include system prompt with high level prompt
         messages = [
-                    {"role": "system", "content": self.high_level_prompt},
+                    {"role": "system", "content": high_level_prompt_modified},
                     {"role": "user", "content": f"<task>{high_level_task}</task>"}
         ]
 
         # get initial plan
-        response = self._execute(messages)
+        response = self._execute(messages, big_guns=True)
         self.history = response
 
         # extract and return plan as list

@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 from pyvis.network import Network
 import torch
 from livereload import Server
+import yaml
 
 class Scenegraph:
     def __init__(self, env, renderer=None):
@@ -498,7 +499,7 @@ class Scenegraph:
         OBJECT = ObjectType("Object")
         ACTION = ObjectType("Action")
 
-        # add ations manually
+        # add actions manually
         domain.define_function(Function("pick", FunctionTyping[BOOL](ACTION, OBJECT)))
         domain.define_function(Function("place", FunctionTyping[BOOL](ACTION, OBJECT)))
         
@@ -548,6 +549,57 @@ class Scenegraph:
     def get_mission(self):
         return self.mission
 
+    def get_summary(self):
+        # handle regular objects
+        summary = []
+        for id in self.obj_ids:
+            typename = "" if not id ==self.robot_id else self.robot_id
+            idx = self.id_to_idx(id)
+            # get attributes
+            obj_summary = {}
+            obj_summary["attributes"] = {}
+            for attr in self.abs_states:
+                try:
+                    value = self.get_attr_for_id(attr, id).item()
+                except:
+                    continue
+                value = bool(value)
+                obj_summary["attributes"][attr] = value
+
+            # get descriptions
+            for descriptor, data in self.descriptor_store.items():
+                descriptor = descriptor.lower()
+                values = data["values"][idx]
+                if values.max().item() == 0:
+                    continue
+                desc_idx = values.argmax()
+                value = self.lookup_descriptor(descriptor, desc_idx)
+                if not descriptor == "type":
+                    obj_summary["attributes"][descriptor] = value
+                else:
+                    typename = value
+                
+            # resolve relations
+            obj_summary["relations"] = {}
+            for rel in self.relations.values():
+                rel_summary = []
+                for to_id in self.obj_ids:
+                    try:
+                        value = self.get_attr_for_id(rel, id, to_id).item()
+                    except:
+                        continue
+                    if value:
+                        rel_summary.append(to_id)
+                if len(rel_summary) > 0:
+                    obj_summary["relations"][rel] = rel_summary
+
+            obj_summary_final = {typename:obj_summary}
+            summary.append(obj_summary_final)
+
+        return yaml.dump(summary)
+
+
+
 
 
 
@@ -557,6 +609,8 @@ if __name__ == "__main__":
     sg.update()
     domain = sg.get_domain()
     domain.print_summary()
+
+    sg.get_summary()
     
     sg.render(fancy_vis=True)
 

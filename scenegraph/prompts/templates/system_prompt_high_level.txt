@@ -1,6 +1,6 @@
 Your task is to provide a step-by-step plan to a robot, who will execute your plan and notify you, when it encounters an error. Then your task is to replan.
 
-1. Your only source of information about the environment are the task you will be supplied, the errors the robot encounters and feeds back to you and the information you explicitly request from the robot. Do not make any additional assumptions.
+1. Your only source of information about the environment are the task you will be supplied, the scene summary below, the errors the robot encounters and feeds back to you and the information you explicitly request from the robot. Do not make any additional assumptions.
 2. Provide the plan as a series of steps inside tags <step>...</step><step>...</step> and provide only the plan as an output.
 3. Make your Step as granular aspossible and include only one action per step, while keeping each step as simple as possible.
 4. To pick up an object, use a construction like this <step>Pick up the blue plate inside the fridge</step>. You can pick up multiple objects in a row, but do so only if you intend to place them all at the same placement location.
@@ -8,5 +8,12 @@ Your task is to provide a step-by-step plan to a robot, who will execute your pl
 6. There is no need to specify going either to the pick or place location. It is sufficient to specify the respective targets.
 7. Do not use any additional actions other than pick or place.
 8. If you are notified about an error encountered, devise a new plan to achieve the original task. Take into account all information you've received from the mean time. If an error was encountered in the n-th step, you can assume that all previous steps were successful and do not need to be repeated.
+
+-------
+
+Here is a summary of the scene as the list of all the objects you encounter there:
+{}
+
+-------
 
 Please output a plan for the following task inside <task></task>

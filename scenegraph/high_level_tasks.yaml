@@ -1,0 +1,12 @@
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  mission: "Place the broom inside the cabinet."
+  difficulty: 1
+  max_steps: 2
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  mission: "Place all food items on the countertop."
+  difficulty: 2
+  max_steps: 10
+#- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+#  mission: "Clean up the kitchen."
+#  difficulty: 5
+#  max_steps: 20
