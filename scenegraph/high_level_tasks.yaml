@@ -1,12 +1,42 @@
 - env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
   mission: "Place the broom inside the cabinet."
-  difficulty: 1
-  max_steps: 2
+  prompt_difficulty: 1
+  success_conditions:
+    - question: "Broom at cabinet"
+      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
 - env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-  mission: "Place all food items on the countertop."
-  difficulty: 2
-  max_steps: 10
-#- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-#  mission: "Clean up the kitchen."
-#  difficulty: 5
-#  max_steps: 20
+  mission: "Place the sweeping tool into the cabinet."
+  prompt_difficulty: 2
+  success_conditions:
+    - question: "Broom at cabinet"
+      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  mission: "Put the sweeping tool away."
+  prompt_difficulty: 3
+  success_conditions:
+    - question: "Broom at cabinet"
+      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  mission: "Broom, rag, bin, and dustpan should be on the countertop."
+  prompt_difficulty: 2
+  success_conditions:
+    - question: "Broom at countertop"
+      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
+    - question: "Rag at countertop"
+      raw_parsing: "exists(Object, lambda x: rag(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
+    - question: "Bin at countertop"
+      raw_parsing: "exists(Object, lambda x: bin(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
+    - question: "Dustpan at countertop"
+      raw_parsing: "exists(Object, lambda x: dustpan(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
+
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  mission: "Put all utensils that are not inside furniture on the countertop."
+  prompt_difficulty: 3
+  success_conditions:
+    - question: "Broom at countertop"
+      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
+    - question: "Blender at countertop"
+      raw_parsing: "exists(Object, lambda x: blender(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"

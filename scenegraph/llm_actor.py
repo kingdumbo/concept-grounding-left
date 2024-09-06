@@ -19,6 +19,7 @@ from mini_behavior.envs import CleaningUpTheKitchenOnlyEnv
 from mini_behavior.window import Window
 import yaml
 import wandb
+import pprint
 
 # Size in pixels of a tile in the full-scale human view
 TILE_PIXELS = 32
@@ -27,12 +28,12 @@ SEED = 1234
 
 
 class LlmActor:
-    def __init__(self, environment_string):
+    def __init__(self, environment_string, time_per_step):
         # init env
         self.env = gym.make(environment_string)
 
         # init scenegraph
-        self.sg = Scenegraph(self.env, self)
+        self.sg = Scenegraph(self.env, self, time_per_step=time_per_step)
         self.sg.update()
 
         # get domain and init oracle
@@ -107,20 +108,22 @@ class LlmActor:
         # then execute
         output, reward, done = self._execute_raw_parsing(question_dict)
         print(f"{command_string} - {raw_parsing} - {output}")
-        wandb.log({
-            "command": command_string,
-            "raw_parsing": raw_parsing,
-            "output": output,
-            "reward": reward,
-            "task_done": done
-        })
+        #wandb.log({
+        #    "command": command_string,
+        #    "raw_parsing": raw_parsing,
+        #    "output": output,
+        #    "reward": reward,
+        #    "task_done": done
+        #})
 
         return output, reward, done
 
-    def execute_task(self, task_description, max_re_plans=1, max_steps = 5):
+    def execute_task(self, task_obj, max_re_plans=1, max_steps = 5):
         # generate initial plan
-        self.mission = task_description
-        plan = self.llm.generate_plan(task_description)
+        success_conds = task_obj.get("success_conditions", [])
+        self.mission = task_obj.get("mission")
+        assert self.mission is not None, "No task specified!"
+        plan = self.llm.generate_plan(self.mission)
         print("PLAN:")
         for i, step in enumerate(plan):
             print(f"{i+1}. {step}")
@@ -128,22 +131,54 @@ class LlmActor:
         # execute until failure
         num_replans = 0
         num_steps = 0
+        max_steps = len(success_conds) * 2 + 1
         done = False
-        while num_replans < max_re_plans and num_steps < max_steps and not done:
+        interrupted = False
+        while num_steps < max_steps and not interrupted:
             for step in plan:
                 self.current_step = step
                 output, reward, done = self.execute_step(step)
                 num_steps += 1
                 if output != "Success":
-                    print("FAILURE: Step not sucessful, aborting task.")
-                    wandb.log({"result": "FAILURE - Step not successful, aborting task."})
-                    return None
-                    plan = self.llm.update_plan(step, output) 
-                    num_replans += 1
+                    interrupted = True
                     break
-            done = True
-        wandb.log({"result": "SUCCESS - All steps successfully executed."})
+            else:
+                done = True
+                interrupted = True
 
+        # evaluate
+        num_passing_success_conds, num_success_conds, not_passinng_success_conds = self._evaluate_task(success_conds)
+        result = {
+            "mission": self.mission,
+            "env": task_obj.get("env"),
+            "all_steps": done,
+            "num_planned_steps": len(plan),
+            "num_steps_completed": num_steps,
+            "max_steps": max_steps,
+            "failed_step": self.current_step if not done else "",
+            "success_conds": num_success_conds,
+            "passing_conds": num_passing_success_conds,
+            "success_rate": num_passing_success_conds/num_success_conds,
+            "failed_conds": not_passinng_success_conds,
+            "prompt_difficulty": task_obj.get("prompt_difficulty")
+        }
+
+        return result
+
+    def _evaluate_task(self, success_conditions):
+        num_success_conds = len(success_conditions)
+        num_passing_success_conds = 0
+        not_passing_success_conds = []
+
+        for cond in success_conditions:
+            cond["answer"] = "yes"
+            output, _, _ = self._execute_raw_parsing(cond)
+            if output == "yes":
+                num_passing_success_conds += 1
+            else:
+                not_passing_success_conds.append(cond["question"])
+        
+        return num_passing_success_conds, num_success_conds, not_passing_success_conds
 
     def _redraw(self):
         img = self.env.render('rgb_array', tile_size=TILE_PIXELS)
@@ -159,17 +194,38 @@ def parse_yaml(filename):
         return yaml.safe_load(file)
 
 if __name__ == "__main__":
-    wandb.init(
-        project="Concept Grounding",
-        
-    )
+    with_wandb = False
+    T = 0.1
+    if with_wandb:
+        wandb.init(
+            project="Concept Grounding",
+            
+        )
     # load tasks
     tasks = parse_yaml("high_level_tasks.yaml")
+    #tasks = [tasks[3]]
+
+    # validate the success conditions
+    env_string = "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+    llm_actor = LlmActor(env_string, T)
+    with_error = []
+    for task in tasks:
+        for cond in task["success_conditions"]:
+            cond["answer"] = "True"
+            output, _, _ = llm_actor._execute_raw_parsing(cond)
+            if output == "":
+                with_error.append(cond)
+    pprint.pp(with_error)
+    if len(with_error) > 0:
+        sys.exit()
+
+    # execute tasks
     for task in tasks:
         print("TASK: " + task["mission"])
         env_string = task["env"]
-        wandb.log({"env": env_string, "mission": task["mission"]})
-        llm_actor = LlmActor(env_string)
+        llm_actor = LlmActor(env_string, T)
         llm_actor.start_render()
-        llm_actor.execute_task(task["mission"], max_steps = task["max_steps"])
-        input()
+        summary = llm_actor.execute_task(task)
+        if with_wandb:
+            wandb.log(summary)
+        pprint.pp(summary)

@@ -3,6 +3,8 @@ import re
 import json
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+import socket
+import torch
 
 BASEBATH = Path(__file__).resolve().parent
 PROMPTS_DIRECTORY = BASEBATH / "prompts"
@@ -217,10 +219,21 @@ def get_n_likeliest_funcs(simplified, domain, n):
     return(return_str)
 
 
+def check_port(host, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(1)  # Set a timeout for the connection attempt
+    try:
+        sock.connect((host, port))
+        sock.close()
+        return True  # Port is in use
+    except (socket.timeout, ConnectionRefusedError):
+        return False  # Port is free or connection refused
 
-
-
-
+def check_min_max_diff(tensor_val, th):
+    min_val = torch.min(tensor_val.tensor)
+    max_val = torch.max(tensor_val.tensor)
+    difference = max_val - min_val
+    return bool(difference > th)
 
 
 if __name__ == "__main__":

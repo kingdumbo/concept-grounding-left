@@ -11,11 +11,9 @@ BASEPATH = Path(__file__).resolve().parent
 sys.path.append(BASEPATH)
 import grid_planner 
 
-# time per step in s
-T = 0.5
-
 class Actor:
-    def __init__(self, env, renderer):
+    def __init__(self, env, renderer, time_per_step=0.5):
+        self.time_per_step = time_per_step # in seconds
         self.env = env
         self.unary_actions = {"pick": self._pick, "place": self._place}
         self.binary_actions = {}
@@ -27,7 +25,7 @@ class Actor:
 
         self.renderer = renderer
 
-        self.status_list = ["Success", "Failure", "Type of action cannot be performed", "Couldn't be reached", "Nothing to place"]
+        self.status_list = ["Success", "Failure", "Type of action cannot be performed", "Couldn't be reached", "Nothing to place", "No valid target"]
 
     def get_actions(self):
         return [key for key in {**self.unary_actions, **self.binary_actions}.keys()]
@@ -38,11 +36,20 @@ class Actor:
     
     def act(self, action, object_1, object_2=None):
         if action in self.unary_actions:
-            status, reward, done = self.unary_actions[action](object_1)
+            if object_1 is None:
+                status = 5 # no valid target 
+                reward = 0
+                done = False
+            else:
+                status, reward, done = self.unary_actions[action](object_1)
             return self.vectorize_output(status), reward, done
         elif action in self.binary_actions:
-            assert object_2 is not None
-            status, reward, done = self.binary_actions[action](object_1, object_2)
+            if object_1 is None or object_2 is None:
+                status = 5 # no valid target 
+                reward = 0
+                done = False
+            else:
+                status, reward, done = self.binary_actions[action](object_1, object_2)
             return self.vectorize_output(status), reward, done
         else:
             raise NotImplementedError(f"Action: {action} is not implemented. Please choose one of {self.get_actions()}")
@@ -68,7 +75,7 @@ class Actor:
             self.env.step(self.actions.open)
             if self.renderer:
                 self.renderer._redraw()
-            time.sleep(T)
+            time.sleep(self.time_per_step)
             opened = True
 
         assert self.env.mode == "primitive"
@@ -82,14 +89,14 @@ class Actor:
                 picked = True
                 if self.renderer:
                     self.renderer._redraw()
-                time.sleep(T)
+                time.sleep(self.time_per_step)
                 break
 
         if opened:
             self.env.step(action.close)
             if self.renderer:
                 self.renderer._redraw()
-            time.sleep(T)
+            time.sleep(self.time_per_step)
 
         return int(not picked), reward, done
 
@@ -117,12 +124,11 @@ class Actor:
         _ = self.env.gen_obs()
         # target may havbe to be opened first
         opened = False
-        breakpoint()
         if "open" in object_1.actions:
             self.env.step(self.actions.open)
             if self.renderer:
                 self.renderer._redraw()
-            time.sleep(T)
+            time.sleep(self.time_per_step)
             opened = True
 
         assert self.env.mode == "primitive"
@@ -136,13 +142,13 @@ class Actor:
                     placed = True
                     if self.renderer:
                         self.renderer._redraw()
-                    time.sleep(T)
+                    time.sleep(self.time_per_step)
 
         if opened:
             self.env.step(self.actions.close)
             if self.renderer:
                 self.renderer._redraw()
-            time.sleep(T)
+            time.sleep(self.time_per_step)
         
         return int(not placed), reward, done
 
@@ -165,7 +171,7 @@ class Actor:
                 self.env.step(action)
                 if self.renderer:
                     self.renderer._redraw()
-                time.sleep(T)
+                time.sleep(self.time_per_step)
             return True
         except IndexError as e:
             print(e)

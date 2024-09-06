@@ -22,9 +22,10 @@ from pyvis.network import Network
 import torch
 from livereload import Server
 import yaml
+from utils import check_port, check_min_max_diff 
 
 class Scenegraph:
-    def __init__(self, env, renderer=None):
+    def __init__(self, env, renderer=None, time_per_step=0.5):
         self.rendering = False
 
         self.env = env
@@ -61,7 +62,7 @@ class Scenegraph:
         self.training = False
 
         # for actions
-        self.actor = Actor(self.env, renderer)
+        self.actor = Actor(self.env, renderer, time_per_step)
         self.mission = self.env.gen_full_obs()["mission"]
         self.current_reward = 0
         self.task_done = False
@@ -429,13 +430,19 @@ class Scenegraph:
         assert action_name in self.actor.get_actions()
 
         # get actual object instances to which object_1 and object_2 (if present) refer
-        idx = object_tensor_1.tensor.argmax()
-        object_1 = self.idx_to_obj(idx)
+        object_1 = None
         object_2 = None
-        
+        th = 0.1
+        valid_diff = check_min_max_diff(object_tensor_1, th)
+        if valid_diff:
+            idx = object_tensor_1.tensor.argmax()
+            object_1 = self.idx_to_obj(idx)
+
         if object_tensor_2 is not None:
-            idx_2 = object_tensor_2.tensor.argmax()
-            object_2 = self.idx_to_obj(idx_2)
+            valid_diff = check_min_max_diff(object_tensor_2, th)
+            if valid_diff:
+                idx = object_tensor_2.tensor.argmax()
+                object_2 = self.idx_to_obj(idx)
 
         # execute action with actor
         result, reward, done =  self.actor.act(action_name, object_1, object_2)
@@ -486,10 +493,12 @@ class Scenegraph:
                     self.rendering=True
                     server = Server()
                     path = path
-                    server.watch(path)
-                    server_thread = threading.Thread(target=server.serve)
-                    server_thread.setDaemon(True)
-                    server_thread.start()
+                    already_watched = check_port("127.0.0.1", 5500)
+                    if not already_watched:
+                        server.watch(path)
+                        server_thread = threading.Thread(target=server.serve)
+                        server_thread.setDaemon(True)
+                        server_thread.start()
 
 
     def get_domain(self):

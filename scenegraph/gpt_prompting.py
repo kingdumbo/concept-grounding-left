@@ -19,9 +19,9 @@ from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchen
 
 
 CONFIG = {
-    "model":"gpt-4o",
+    "model":"gpt-4o-mini",
     "max_tokens": 256,
-    "temperature": 1,
+    "temperature": 0,
     "top_p": 1,
     "frequency_penalty": 0,
     "presence_penalty": 0,
