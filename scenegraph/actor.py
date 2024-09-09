@@ -135,10 +135,16 @@ class Actor:
         placed = False
         carrying_before = [obj for obj in self.env.carrying]
         place_actions = [self.actions.drop_0, self.actions.drop_1, self.actions.drop_2, self.actions.drop_in]
+        
+        # for checking if is placed
+        pos = self.env.agent_pos
+        dir = self.env.agent_dir
+
+        # try placing actions until placed
         for action in place_actions:
             _, reward, done, _ = self.env.step(action)
             for obj in carrying_before:
-                if obj.inside_of:
+                if obj in self._get_obj_infront(pos, dir):
                     placed = True
                     if self.renderer:
                         self.renderer._redraw()
@@ -189,3 +195,21 @@ class Actor:
                     grid[i,j] = 0
         return grid
 
+
+    def _get_obj_infront(self, agent_pos, agent_dir):
+        # get cell directly in front of agent 
+        target_pos = [*agent_pos]
+        if agent_dir == 0:
+            target_pos[0] += 1
+        elif agent_dir == 1:
+            target_pos[1] += 1
+        elif agent_dir == 2:
+            target_pos[0] -= 1
+        else:
+            target_pos[1] -= 1
+
+        # get cell contents
+        objs_infront = self.env.grid.get(*target_pos)
+        objs_infront = [item for sublist in objs_infront for item in sublist]
+
+        return objs_infront

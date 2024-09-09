@@ -203,7 +203,7 @@ if __name__ == "__main__":
         )
     # load tasks
     tasks = parse_yaml("high_level_tasks.yaml")
-    #tasks = [tasks[3]]
+    tasks = [tasks[3]]
 
     # validate the success conditions
     env_string = "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
