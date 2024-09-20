@@ -12,20 +12,20 @@ Is there a broom?,yes,BOOL,1,"exists(Object, lambda x: broom(x))",yes,123544
 Is there a cleaning tool?,yes,BOOL,1,"exists(Object, lambda x: cleaningtool(x))",yes,123544
 Is there a sink?,yes,BOOL,1,"exists(Object, lambda x: sink(x))",yes,123544
 Is there a frozen apple?,yes,BOOL,2,"exists(Object, lambda x: apple(x) and frozen(x))",yes,123544
-Is there a vegetable oil inside the fridge?,yes,BOOL,2,"exists(Object, lambda x: vegetable_oil(x) and inside(x, iota(Object, lambda y: fridge(y))))",,123544
+Is there a vegetable oil inside the fridge?,yes,BOOL,2,"exists(Object, lambda x: vegetable_oil(x) and inside(x, iota(Object, lambda y: furniture(y))))",no,123544
 Is there a bin in front of the robot?,yes,BOOL,2,"exists(Object, lambda x: bin(x) and infront(x, iota(Object, lambda y: robot(y))))",yes,123544
 Is there a brown rag inside the cabinet?,no,BOOL,3,"exists(Object, lambda x: brown(x) and rag(x) and inside(x, iota(Object, lambda y: cabinet(y))))",no,123544
-Is there a rag in the same room as the robot and next to a dustpan?,yes,BOOL,3,"exists(Object, lambda x: rag(x) and on(x, iota(Object, lambda y: dustpan(y))) and exists(Object, lambda z: robot(z)))",,123544
+Is there a rag in the same room as the robot and next to a dustpan?,yes,BOOL,3,"exists(Object, lambda x: rag(x) and open(x, iota(Object, lambda y: dustpan(y))) and same_room(x, iota(Object, lambda z: robot(z))))",,123544
 Is there a white plate next to the casserole?,yes,BOOL,3,"exists(Object, lambda x: white(x) and plate(x) and nextto(x, iota(Object, lambda y: casserole(y))))",yes,123544
 What is the color of the apple?,white,DESCRIBE,1,"describe(Color, lambda x: color(x, iota(Object, lambda y: apple(y))))",white,123544
 What is the name of the blender?,blender_0,DESCRIBE,1,"describe(Name, lambda x: name(x, iota(Object, lambda y: blender(y))))",blender_0,123544
 What is the type of the broom?,broom,DESCRIBE,1,"describe(Type, lambda x: type(x, iota(Object, lambda y: broom(y))))",broom,123544
 What is the name of the blue sink?,sink_0,DESCRIBE,2,"describe(Name, lambda x: name(x, iota(Object, lambda y: blue(y) and sink(y))))",sink_0,123544
-What is the color of the vegetable oil inside the fridge?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: fridge(z))))))",,123544
-What is the color of the soap in the same room as the robot?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and on(y, iota(Object, lambda z: robot(z)))))",,123544
-What is the color of the soap in the same room as the robot inside the cabinet?,white,DESCRIBE,3,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and on(y, iota(Object, lambda z: robot(z)))))",,123544
+What is the color of the vegetable oil inside the fridge?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: furniture(z))))))",white,123544
+What is the color of the soap in the same room as the robot?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and open(y, iota(Object, lambda z: robot(z)))))",,123544
+What is the color of the soap in the same room as the robot inside the cabinet?,white,DESCRIBE,3,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and open(y, iota(Object, lambda z: robot(z)))))",,123544
 What is the name of the dustpan next to the rag and next to the soap?,dustpan_0,DESCRIBE,3,"describe(Name, lambda x: name(x, iota(Object, lambda y: dustpan(y) and nextto(y, iota(Object, lambda z: rag(z))) and nextto(y, iota(Object, lambda w: soap(w)))))",,123544
-What is the type of the slice and frozen thing inside the fridge?,apple,DESCRIBE,3,"describe(Type, lambda x: type(x, iota(Object, lambda y: (sliced(y) or frozen(y)) and inhand(y, iota(Object, lambda z: fridge(z))))))",,123544
+What is the type of the slice and frozen thing inside the fridge?,apple,DESCRIBE,3,"describe(Type, lambda x: type(x, iota(Object, lambda y: sliced(y) and frozen(y) and inhand(y, iota(Object, lambda z: furniture(z))))))",cabinet,123544
 How many robots are there?,1,COUNT,1,"count(Object, lambda x: robot(x))",1,123544
 How many dusty things are there?,1,COUNT,1,"count(Object, lambda x: dusty(x))",2,123544
 How many objects are in front of the robot?,6,COUNT,1,"count(Object, lambda x: infront(x, iota(Object, lambda y: robot(y))))",7,123544
@@ -39,20 +39,20 @@ Is there a broom?,yes,BOOL,1,"exists(Object, lambda x: broom(x))",yes,123544
 Is there a cleaning tool?,yes,BOOL,1,"exists(Object, lambda x: cleaningtool(x))",yes,123544
 Is there a sink?,yes,BOOL,1,"exists(Object, lambda x: sink(x))",yes,123544
 Is there a frozen apple?,yes,BOOL,2,"exists(Object, lambda x: apple(x) and frozen(x))",yes,123544
-Is there a vegetable oil inside the fridge?,yes,BOOL,2,"exists(Object, lambda x: vegetable_oil(x) and inside(x, iota(Object, lambda y: fridge(y))))",,123544
+Is there a vegetable oil inside the fridge?,yes,BOOL,2,"exists(Object, lambda x: vegetable_oil(x) and inside(x, iota(Object, lambda y: furniture(y))))",no,123544
 Is there a bin in front of the robot?,yes,BOOL,2,"exists(Object, lambda x: bin(x) and infront(x, iota(Object, lambda y: robot(y))))",yes,123544
 Is there a brown rag inside the cabinet?,no,BOOL,3,"exists(Object, lambda x: brown(x) and rag(x) and inside(x, iota(Object, lambda y: cabinet(y))))",no,123544
-Is there a rag in the same room as the robot and next to a dustpan?,yes,BOOL,3,"exists(Object, lambda x: rag(x) and on(x, iota(Object, lambda y: dustpan(y))) and exists(Object, lambda z: robot(z)))",,123544
+Is there a rag in the same room as the robot and next to a dustpan?,yes,BOOL,3,"exists(Object, lambda x: rag(x) and open(x, iota(Object, lambda y: dustpan(y))) and same_room(x, iota(Object, lambda z: robot(z))))",,123544
 Is there a white plate next to the casserole?,yes,BOOL,3,"exists(Object, lambda x: white(x) and plate(x) and nextto(x, iota(Object, lambda y: casserole(y))))",yes,123544
 What is the color of the apple?,white,DESCRIBE,1,"describe(Color, lambda x: color(x, iota(Object, lambda y: apple(y))))",white,123544
 What is the name of the blender?,blender_0,DESCRIBE,1,"describe(Name, lambda x: name(x, iota(Object, lambda y: blender(y))))",blender_0,123544
 What is the type of the broom?,broom,DESCRIBE,1,"describe(Type, lambda x: type(x, iota(Object, lambda y: broom(y))))",broom,123544
 What is the name of the blue sink?,sink_0,DESCRIBE,2,"describe(Name, lambda x: name(x, iota(Object, lambda y: blue(y) and sink(y))))",sink_0,123544
-What is the color of the vegetable oil inside the fridge?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: fridge(z))))))",,123544
-What is the color of the soap in the same room as the robot?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and on(y, iota(Object, lambda z: robot(z)))))",,123544
-What is the color of the soap in the same room as the robot inside the cabinet?,white,DESCRIBE,3,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and on(y, iota(Object, lambda z: robot(z)))))",,123544
+What is the color of the vegetable oil inside the fridge?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: furniture(z))))))",white,123544
+What is the color of the soap in the same room as the robot?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and open(y, iota(Object, lambda z: robot(z)))))",,123544
+What is the color of the soap in the same room as the robot inside the cabinet?,white,DESCRIBE,3,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and open(y, iota(Object, lambda z: robot(z)))))",,123544
 What is the name of the dustpan next to the rag and next to the soap?,dustpan_0,DESCRIBE,3,"describe(Name, lambda x: name(x, iota(Object, lambda y: dustpan(y) and nextto(y, iota(Object, lambda z: rag(z))) and nextto(y, iota(Object, lambda w: soap(w)))))",,123544
-What is the type of the slice and frozen thing inside the fridge?,apple,DESCRIBE,3,"describe(Type, lambda x: type(x, iota(Object, lambda y: (sliced(y) or frozen(y)) and inhand(y, iota(Object, lambda z: fridge(z))))))",,123544
+What is the type of the slice and frozen thing inside the fridge?,apple,DESCRIBE,3,"describe(Type, lambda x: type(x, iota(Object, lambda y: sliced(y) and frozen(y) and inhand(y, iota(Object, lambda z: furniture(z))))))",cabinet,123544
 How many robots are there?,1,COUNT,1,"count(Object, lambda x: robot(x))",1,123544
 How many dusty things are there?,1,COUNT,1,"count(Object, lambda x: dusty(x))",2,123544
 How many objects are in front of the robot?,6,COUNT,1,"count(Object, lambda x: infront(x, iota(Object, lambda y: robot(y))))",7,123544
@@ -66,17 +66,17 @@ Is there a broom?,yes,BOOL,1,"exists(Object, lambda x: broom(x))",yes,123544
 Is there a cleaning tool?,yes,BOOL,1,"exists(Object, lambda x: cleaningtool(x))",yes,123544
 Is there a sink?,yes,BOOL,1,"exists(Object, lambda x: sink(x))",yes,123544
 Is there a frozen apple?,yes,BOOL,2,"exists(Object, lambda x: apple(x) and frozen(x))",yes,123544
-Is there a vegetable oil inside the fridge?,yes,BOOL,2,"exists(Object, lambda x: vegetable_oil(x) and inside(x, iota(Object, lambda y: fridge(y))))",,123544
+Is there a vegetable oil inside the fridge?,yes,BOOL,2,"exists(Object, lambda x: vegetable_oil(x) and inside(x, iota(Object, lambda y: furniture(y))))",no,123544
 Is there a bin in front of the robot?,yes,BOOL,2,"exists(Object, lambda x: bin(x) and infront(x, iota(Object, lambda y: robot(y))))",yes,123544
 Is there a brown rag inside the cabinet?,no,BOOL,3,"exists(Object, lambda x: brown(x) and rag(x) and inside(x, iota(Object, lambda y: cabinet(y))))",no,123544
-Is there a rag in the same room as the robot and next to a dustpan?,yes,BOOL,3,"exists(Object, lambda x: rag(x) and on(x, iota(Object, lambda y: dustpan(y))) and exists(Object, lambda z: robot(z)))",,123544
+Is there a rag in the same room as the robot and next to a dustpan?,yes,BOOL,3,"exists(Object, lambda x: rag(x) and open(x, iota(Object, lambda y: dustpan(y))) and same_room(x, iota(Object, lambda z: robot(z))))",,123544
 Is there a white plate next to the casserole?,yes,BOOL,3,"exists(Object, lambda x: white(x) and plate(x) and nextto(x, iota(Object, lambda y: casserole(y))))",yes,123544
 What is the color of the apple?,white,DESCRIBE,1,"describe(Color, lambda x: color(x, iota(Object, lambda y: apple(y))))",white,123544
 What is the name of the blender?,blender_0,DESCRIBE,1,"describe(Name, lambda x: name(x, iota(Object, lambda y: blender(y))))",blender_0,123544
 What is the type of the broom?,broom,DESCRIBE,1,"describe(Type, lambda x: type(x, iota(Object, lambda y: broom(y))))",broom,123544
 What is the name of the blue sink?,sink_0,DESCRIBE,2,"describe(Name, lambda x: name(x, iota(Object, lambda y: blue(y) and sink(y))))",sink_0,123544
-What is the color of the vegetable oil inside the fridge?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: fridge(z))))))",,123544
-What is the color of the soap in the same room as the robot?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and on(y, iota(Object, lambda z: robot(z)))))",,123544
-What is the color of the soap in the same room as the robot inside the cabinet?,white,DESCRIBE,3,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and on(y, iota(Object, lambda z: robot(z)))))",,123544
+What is the color of the vegetable oil inside the fridge?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: furniture(z))))))",white,123544
+What is the color of the soap in the same room as the robot?,white,DESCRIBE,2,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and open(y, iota(Object, lambda z: robot(z)))))",,123544
+What is the color of the soap in the same room as the robot inside the cabinet?,white,DESCRIBE,3,"describe(Color, lambda x: color(x, iota(Object, lambda y: soap(y) and open(y, iota(Object, lambda z: robot(z)))))",,123544
 What is the name of the dustpan next to the rag and next to the soap?,dustpan_0,DESCRIBE,3,"describe(Name, lambda x: name(x, iota(Object, lambda y: dustpan(y) and nextto(y, iota(Object, lambda z: rag(z))) and nextto(y, iota(Object, lambda w: soap(w)))))",,123544
-What is the type of the slice and frozen thing inside the fridge?,apple,DESCRIBE,3,"describe(Type, lambda x: type(x, iota(Object, lambda y: (sliced(y) or frozen(y)) and inhand(y, iota(Object, lambda z: fridge(z))))))",,123544
+What is the type of the slice and frozen thing inside the fridge?,apple,DESCRIBE,3,"describe(Type, lambda x: type(x, iota(Object, lambda y: sliced(y) and frozen(y) and inhand(y, iota(Object, lambda z: furniture(z))))))",cabinet,123544
