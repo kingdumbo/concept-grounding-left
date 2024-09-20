@@ -15,13 +15,14 @@ RESULTS_DIRECTORY = BASEPATH / "results" / "raw"
 sys.path.append(BASEPATH)
 import utils
 from scenegraph import Scenegraph
+from utils import correct_parsing, extract_functions_from_domain
 from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
 
 
 CONFIG = {
     "model":"gpt-4o-mini",
     "max_tokens": 256,
-    "temperature": 0,
+    "temperature": 0.2,
     "top_p": 1,
     "frequency_penalty": 0,
     "presence_penalty": 0,
@@ -43,9 +44,15 @@ class PromptingOpenAI:
         # high level prompt needs to maintain history:
         self.history = None
 
-    def _execute(self, messages, config=None, big_guns=False):
+        # for correcting parsings
+        self.domain_funcs = extract_functions_from_domain(self.domain)
+
+    def _execute(self, messages, config=None, big_guns=False, seed=None):
         if config is None:
             config = self.config
+
+        if seed is not None:
+            config["seed"] = seed
 
         model = config["model"]
         if big_guns:
@@ -63,7 +70,7 @@ class PromptingOpenAI:
         )
         return response
 
-    def to_raw_parsing(self, message):
+    def to_raw_parsing(self, message, seed=None, apply_correction=False):
         # transform every question in system prompt - user prompt pair
         messages = [
                     {"role": "system", "content": self.initial_prompt},
@@ -71,7 +78,7 @@ class PromptingOpenAI:
         ]
 
         # first query produces simplified output
-        response = self._execute(messages)
+        response = self._execute(messages, seed=seed)
 
         # then get the programm
         simplified = utils.extract_tag_inner(response.choices[0].message.content, "simplified")[0]
@@ -87,13 +94,18 @@ class PromptingOpenAI:
         messages.extend(follow_up_messages)
 
         # get code
-        response = self._execute(messages)
+        response = self._execute(messages, seed=seed)
 
         # extract and return
         raw_parsing = utils.extract_raw_parsing(response.choices[0].message.content)
+        
+        # apply fixing to raw_parsing
+        if apply_correction:
+            raw_parsing = correct_parsing(raw_parsing, self.domain_funcs)
+
         return raw_parsing
 
-    def generate_plan(self, high_level_task):
+    def generate_plan(self, high_level_task, seed=None):
         # generate a scene summary to include with the prompt
         scene_summary = self.sg.get_summary()
         high_level_prompt_modified = self.high_level_prompt.format(scene_summary)
@@ -105,7 +117,7 @@ class PromptingOpenAI:
         ]
 
         # get initial plan
-        response = self._execute(messages, big_guns=True)
+        response = self._execute(messages, big_guns=True, seed=seed)
         self.history = response
 
         # extract and return plan as list

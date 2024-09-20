@@ -1,27 +1,25 @@
 - env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-  mission: "Place the broom inside the cabinet."
-  prompt_difficulty: 1
+  title: "Broom in cabinet"
+  prompts:
+    - mission: "Place the broom inside the cabinet."
+      prompt_difficulty: 1
+    - mission: "Place the sweeping tool into the cabinet."
+      prompt_difficulty: 2
+    - mission: "Put the sweeping tool away."
+      prompt_difficulty: 3
   success_conditions:
     - question: "Broom at cabinet"
       raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
 
 - env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-  mission: "Place the sweeping tool into the cabinet."
-  prompt_difficulty: 2
-  success_conditions:
-    - question: "Broom at cabinet"
-      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
-
-- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-  mission: "Put the sweeping tool away."
-  prompt_difficulty: 3
-  success_conditions:
-    - question: "Broom at cabinet"
-      raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
-
-- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-  mission: "Broom, rag, bin, and dustpan should be on the countertop."
-  prompt_difficulty: 2
+  title: "Cleaning tools on countertop"
+  prompts:
+    - mission: "Place broom, rag, bin, and dustpan on the countertop."
+      prompt_difficulty: 1
+    - mission: "Place all utensils for sweeping and wiping on the countertop."
+      prompt_difficulty: 2
+    - mission: "I want all utensils for sweeping and wiping where I prepare the food."
+      prompt_difficulty: 3
   success_conditions:
     - question: "Broom at countertop"
       raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
@@ -33,10 +31,244 @@
       raw_parsing: "exists(Object, lambda x: dustpan(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
 
 - env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-  mission: "Put all utensils that are not inside furniture on the countertop."
-  prompt_difficulty: 3
+  title: "Broom, blender on countertop"
+  prompts:
+    - mission: "Put broom and blender on the countertop."
+      prompt_difficulty: 1
+    - mission: "Put all utensils that are not inside furniture on the countertop."
+      prompt_difficulty: 2
+    - mission: "Pick up what shouldn't be on the floor and put on the countertop."
+      prompt_difficulty: 3
   success_conditions:
     - question: "Broom at countertop"
       raw_parsing: "exists(Object, lambda x: broom(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
     - question: "Blender at countertop"
       raw_parsing: "exists(Object, lambda x: blender(x) and atsamelocation(x, iota(Object, lambda y: countertop(y))))"
+
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  title: "Empty fridge"
+  prompts:
+    - mission: "Remove the plate, casserole, apple, and vegetable oil from the fridge."
+      prompt_difficulty: 1
+    - mission: "Remove all items from inside the fridge."
+      prompt_difficulty: 2
+    - mission: "Clear out the fridge."
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Plate removed"
+      raw_parsing: "exists(Object, lambda x: plate_0(x) and not inside(x, iota(Object, lambda y: electric_refrigerator(y))))"
+    - question: "Casserole removed"
+      raw_parsing: "exists(Object, lambda x: casserole_0(x) and not inside(x, iota(Object, lambda y: electric_refrigerator(y))))"
+    - question: "Vegetable oil removed"
+      raw_parsing: "exists(Object, lambda x: vegetable_oil_0(x) and not inside(x, iota(Object, lambda y: electric_refrigerator(y))))"
+    - question: "Apple removed."
+      raw_parsing: "exists(Object, lambda x: apple_0(x) and not inside(x, iota(Object, lambda y: electric_refrigerator(y))))"
+
+- env: "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
+  title: "Swap contents of fridge, cabinet"
+  prompts:
+    - mission: "Place the vegetable oil, plate, casserole, and apple on the countertop. Then place the soap, rag, and dustpan in the fridge. Then place the oil, plate, casserole, and apple in the cabinet."
+      prompt_difficulty: 1
+    - mission: "Place all the contents of the fridge on the countertop, then all contents of the cabinet in the fridge, and then the items from the countertop in the cabinet."
+      prompt_difficulty: 2
+    - mission: "Swap the contents of the fridge and the cabinet."
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Plate swapped."
+      raw_parsing: "exists(Object, lambda x: plate_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Casserole swapped."
+      raw_parsing: "exists(Object, lambda x: casserole_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Vegetable oil swapped"
+      raw_parsing: "exists(Object, lambda x: vegetable_oil_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Apple swapped"
+      raw_parsing: "exists(Object, lambda x: apple_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Soap swapped"
+      raw_parsing: "exists(Object, lambda x: soap_0(x) and atsamelocation(x, iota(Object, lambda y: electric_refrigerator(y))))"
+    - question: "Rag swapped"
+      raw_parsing: "exists(Object, lambda x: rag_0(x) and atsamelocation(x, iota(Object, lambda y: electric_refrigerator(y))))"
+    - question: "Dustpan swapped"
+      raw_parsing: "exists(Object, lambda x: dustpan_0(x) and atsamelocation(x, iota(Object, lambda y: electric_refrigerator(y))))"
+  
+- env: "MiniGrid-CollectMisplacedItems-16x16-N2-v0"
+  title: "Necklace on table"
+  prompts:
+    - mission: "Place the necklace on the table."
+      prompt_difficulty: 1
+    - mission: "Put any jewelry on the table."
+      prompt_difficulty: 2
+    - mission: "Jewelry shouldn't be on the floor!"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Necklace on table"
+      raw_parsing: "exists(Object, lambda x: necklace(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+
+- env: "MiniGrid-CollectMisplacedItems-16x16-N2-v0"
+  title: "Socks in cabinet"
+  prompts:
+    - mission: "Place both socks in the cabinet"
+      prompt_difficulty: 1
+    - mission: "Place any clothing items in the cabinet."
+      prompt_difficulty: 2
+    - mission: "Clean up the clothing items."
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Sock_1 in cabinet"
+      raw_parsing: "exists(Object, lambda x: sock_1(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Sock_0 in cabinet"
+      raw_parsing: "exists(Object, lambda x: sock_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-CollectMisplacedItems-16x16-N2-v0"
+  title: "Prepare gym clothing"
+  prompts:
+    - mission: "Place both socks and the gym shoes on a table."
+      prompt_difficulty: 1
+    - mission: "Place the gym clothing on a table."
+      prompt_difficulty: 2
+    - mission: "Prepare my gym clothing where I can easily reach it!"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Sock_1 on table"
+      raw_parsing: "exists(Object, lambda x: sock_1(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+    - question: "Sock_0 on table"
+      raw_parsing: "exists(Object, lambda x: sock_0(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+    - question: "Shoes on table"
+      raw_parsing: "exists(Object, lambda x: gym_shoe(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+    - question: "All at same location"
+      raw_parsing: "exists(Object, lambda x: gym_shoe(x) and atsamelocation(x, iota(Object, lambda y: sock_1(y))) and atsamelocation(x, iota(Object, lambda z: sock_0(z))))"
+
+- env: "MiniGrid-CollectMisplacedItems-16x16-N2-v0"
+  title: "Notebook on couch table"
+  prompts:
+    - mission: "Place the notebook on the table next to the sofa"
+      prompt_difficulty: 1
+    - mission: "Place the journal on the table next to the sofa"
+      prompt_difficulty: 2
+    - mission: "Put the journal on the couch table"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Journal on table"
+      raw_parsing: "exists(Object, lambda x: notebook_0(x) and atsamelocation(x, iota(Object, lambda y: table_0(y))))"
+
+- env: "MiniGrid-CollectMisplacedItems-16x16-N2-v0"
+  title: "Everything in cabinet"
+  prompts:
+    - mission: "Place the socks, the necklace, and the notebook in the cabinet"
+      prompt_difficulty: 1
+    - mission: "Place all items in the cabinet."
+      prompt_difficulty: 2
+    - mission: "Hide everything that's lying around."
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Sock_1 in cabinet"
+      raw_parsing: "exists(Object, lambda x: sock_1(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Sock_0 in cabinet"
+      raw_parsing: "exists(Object, lambda x: sock_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Necklace in cabinet"
+      raw_parsing: "exists(Object, lambda x: necklace(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Notebook in cabinet"
+      raw_parsing: "exists(Object, lambda x: notebook(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-CollectMisplacedItems-16x16-N2-v0"
+  title: "Everything in cabinet"
+  prompts:
+    - mission: "Place the socks, the necklace, and the notebook in the cabinet"
+      prompt_difficulty: 1
+    - mission: "Place all items in the cabinet."
+      prompt_difficulty: 2
+    - mission: "Hide everything that's lying around."
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Sock_1 in cabinet"
+      raw_parsing: "exists(Object, lambda x: sock_1(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Sock_0 in cabinet"
+      raw_parsing: "exists(Object, lambda x: sock_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Necklace in cabinet"
+      raw_parsing: "exists(Object, lambda x: necklace(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Notebook in cabinet"
+      raw_parsing: "exists(Object, lambda x: notebook(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-OrganizingFileCabinet-16x16-N2-v0"
+  title: "Marker on table"
+  prompts:
+    - mission: "Put the marker on the table"
+      prompt_difficulty: 1
+    - mission: "Put the Highlighter on the table"
+      prompt_difficulty: 2
+    - mission: "Put the Highlighter on the desk"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Highlighter on table"
+      raw_parsing: "exists(Object, lambda x: marker(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+
+- env: "MiniGrid-OrganizingFileCabinet-16x16-N2-v0"
+  title: "Documents in cabinet"
+  prompts:
+    - mission: "Put the documents on the table in the cabinet"
+      prompt_difficulty: 1
+    - mission: "All documents should be in the cabinet"
+      prompt_difficulty: 2
+    - mission: "Put away the documents"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Document_0 in cabinet"
+      raw_parsing: "exists(Object, lambda x: document_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Document_1 in cabinet"
+      raw_parsing: "exists(Object, lambda x: document_1(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-OrganizingFileCabinet-16x16-N2-v0"
+  title: "All office supplies on table"
+  prompts:
+    - mission: "Place the documents from the cabinet, the marker, and the folder on the floor on the table"
+      prompt_difficulty: 1
+    - mission: "Put all office supplies on the table"
+      prompt_difficulty: 2
+    - mission: "Put all office supplies where they are easy to work with"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Document_3 on table"
+      raw_parsing: "exists(Object, lambda x: document_3(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+    - question: "Document_1 on table"
+      raw_parsing: "exists(Object, lambda x: document_1(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+    - question: "Marker on table"
+      raw_parsing: "exists(Object, lambda x: marker(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+    - question: "Folder on table"
+      raw_parsing: "exists(Object, lambda x: folder(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+
+- env: "MiniGrid-OrganizingFileCabinet-16x16-N2-v0"
+  title: "Swap chair and cabinet contents"
+  prompts:
+    - mission: "Place the marker in the cabinet and the documents from the cabinet on the chair."
+      prompt_difficulty: 1
+    - mission: "Place what's on the chair into the cabinet and the contents of the cabinet on the chair"
+      prompt_difficulty: 2
+    - mission: "Swap the contents of chair and cabinet"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Document_3 on chair"
+      raw_parsing: "exists(Object, lambda x: document_3(x) and atsamelocation(x, iota(Object, lambda y: chair(y))))"
+    - question: "Document_1 on chair"
+      raw_parsing: "exists(Object, lambda x: document_1(x) and atsamelocation(x, iota(Object, lambda y: chair(y))))"
+    - question: "Marker in cabinet"
+      raw_parsing: "exists(Object, lambda x: marker(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+
+- env: "MiniGrid-OrganizingFileCabinet-16x16-N2-v0"
+  title: "Organize file cabinet"
+  prompts:
+    - mission: "Place the marker on the table, the documents and folders in the cabinet."
+      prompt_difficulty: 1
+    - mission: "Place writing utensils on the table and papers in the cabinet"
+      prompt_difficulty: 2
+    - mission: "Organize the room"
+      prompt_difficulty: 3
+  success_conditions:
+    - question: "Document_0 in cabinet"
+      raw_parsing: "exists(Object, lambda x: document_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Document_2 in cabinet"
+      raw_parsing: "exists(Object, lambda x: document_2(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Folder_0 in cabinet"
+      raw_parsing: "exists(Object, lambda x: folder_0(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Folder_1 in cabinet"
+      raw_parsing: "exists(Object, lambda x: folder_1(x) and atsamelocation(x, iota(Object, lambda y: cabinet(y))))"
+    - question: "Marker on table"
+      raw_parsing: "exists(Object, lambda x: marker(x) and atsamelocation(x, iota(Object, lambda y: table(y))))"
+

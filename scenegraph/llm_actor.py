@@ -20,17 +20,21 @@ from mini_behavior.window import Window
 import yaml
 import wandb
 import pprint
+import matplotlib.pyplot as plt
+import torch
 
 # Size in pixels of a tile in the full-scale human view
 TILE_PIXELS = 32
 show_furniture = False
-SEED = 1234
 
 
 class LlmActor:
-    def __init__(self, environment_string, time_per_step):
+    def __init__(self, environment_string, time_per_step, seed=0):
         # init env
         self.env = gym.make(environment_string)
+        if seed:
+            self.env.seed(seed)
+            self.env.reset()
 
         # init scenegraph
         self.sg = Scenegraph(self.env, self, time_per_step=time_per_step)
@@ -79,6 +83,11 @@ class LlmActor:
         self.sg.render(continual_rendering=True)
         self._redraw()
         self.window.show(block=False)
+
+    def stop_render(self):
+        self.render = False
+        self.window.closed = True
+        plt.close(self.window.fig)
         
 
     def _execute_raw_parsing(self, command):
@@ -91,18 +100,20 @@ class LlmActor:
                 self.sg.render(continual_rendering=True)
                 self._redraw()
             output = output["pred_answer"][0]
+            if output == "":
+                output = "Failed parsing"
             self.reward, self.task_done = self.sg.get_reward_n_done()
             return output, self.reward, self.task_done
         except Exception as e:
             raise e
             
-    def execute_step(self, command_string):
+    def execute_step(self, command_string, seed=None):
         question_dict = {
             "question": command_string,
             "answer": "Success"
         }
         # first get raw_parsing
-        raw_parsing = self.llm.to_raw_parsing(command_string)
+        raw_parsing = self.llm.to_raw_parsing(command_string, seed=seed)
         question_dict["raw_parsing"] = raw_parsing
 
         # then execute
@@ -119,11 +130,13 @@ class LlmActor:
         return output, reward, done
 
     def execute_task(self, task_obj, max_re_plans=1, max_steps = 5):
+        # extract seed
+        seed = task_obj.get("seed")
         # generate initial plan
         success_conds = task_obj.get("success_conditions", [])
         self.mission = task_obj.get("mission")
         assert self.mission is not None, "No task specified!"
-        plan = self.llm.generate_plan(self.mission)
+        plan = self.llm.generate_plan(self.mission, seed)
         print("PLAN:")
         for i, step in enumerate(plan):
             print(f"{i+1}. {step}")
@@ -137,7 +150,7 @@ class LlmActor:
         while num_steps < max_steps and not interrupted:
             for step in plan:
                 self.current_step = step
-                output, reward, done = self.execute_step(step)
+                output, reward, done = self.execute_step(step, seed)
                 num_steps += 1
                 if output != "Success":
                     interrupted = True
@@ -149,6 +162,7 @@ class LlmActor:
         # evaluate
         num_passing_success_conds, num_success_conds, not_passinng_success_conds = self._evaluate_task(success_conds)
         result = {
+            "title": task_obj.get("title"),
             "mission": self.mission,
             "env": task_obj.get("env"),
             "all_steps": done,
@@ -160,7 +174,9 @@ class LlmActor:
             "passing_conds": num_passing_success_conds,
             "success_rate": num_passing_success_conds/num_success_conds,
             "failed_conds": not_passinng_success_conds,
-            "prompt_difficulty": task_obj.get("prompt_difficulty")
+            "prompt_difficulty": task_obj.get("prompt_difficulty"),
+            "final_output": output,
+            "plan": plan
         }
 
         return result
@@ -195,7 +211,7 @@ def parse_yaml(filename):
 
 if __name__ == "__main__":
     with_wandb = False
-    T = 0.1
+    T = 0
     if with_wandb:
         wandb.init(
             project="Concept Grounding",
@@ -203,29 +219,59 @@ if __name__ == "__main__":
         )
     # load tasks
     tasks = parse_yaml("high_level_tasks.yaml")
-    tasks = [tasks[3]]
 
     # validate the success conditions
-    env_string = "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0"
-    llm_actor = LlmActor(env_string, T)
     with_error = []
+    prev_env_string = ""
+    llm_actor = None
     for task in tasks:
+        env_string = task["env"]
+        if not env_string == prev_env_string:
+            env_string = task["env"]
+            llm_actor = LlmActor(env_string, T)
+            prev_env_string = env_string
         for cond in task["success_conditions"]:
             cond["answer"] = "True"
             output, _, _ = llm_actor._execute_raw_parsing(cond)
             if output == "":
                 with_error.append(cond)
+        llm_actor.stop_render()
     pprint.pp(with_error)
     if len(with_error) > 0:
         sys.exit()
 
+    # re-run with different seeds
+    seeds = [123, 456, 789, 101112, 131415]
+
+    # constrain for test
+    #seeds = seeds[:2]
+    #tasks = tasks[5:7]
+
     # execute tasks
-    for task in tasks:
-        print("TASK: " + task["mission"])
-        env_string = task["env"]
-        llm_actor = LlmActor(env_string, T)
-        llm_actor.start_render()
-        summary = llm_actor.execute_task(task)
-        if with_wandb:
-            wandb.log(summary)
-        pprint.pp(summary)
+    data = []
+    for seed in seeds:
+        torch.manual_seed(seed)
+        for task in tasks:
+            for task_formulation in task["prompts"]:
+                try:
+                    task = {**task, **task_formulation, "seed": seed}
+                    print("TASK: " + task["mission"])
+                    env_string = task["env"]
+                    llm_actor = LlmActor(env_string, T, seed=seed)
+                    llm_actor.start_render()
+                    summary = llm_actor.execute_task(task)
+                    llm_actor.stop_render()
+                    data.append(summary)
+                    if with_wandb:
+                        wandb.log(summary)
+                    pprint.pp(summary)
+                except Exception as e:
+                    print(f"ERROR {e} for: {task}")
+
+    # save data as df
+    df = pd.DataFrame(data)
+    current_file_path = os.path.abspath(__file__)
+    directory = os.path.join(os.path.dirname(current_file_path), 'analysis', 'data')
+    file_path = os.path.join(directory, 'data_main.csv')
+    df.to_csv(file_path, index=False)
+    

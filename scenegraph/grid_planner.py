@@ -117,10 +117,10 @@ def a_star_search_modified(
         new_goal = face_goal(goal, closest)
         if new_goal != closest:
             came_from[new_goal] = closest
-        return reconstruct_path(came_from, new_goal)
+        return reconstruct_path(came_from, new_goal), new_goal
 
     print("Reachable goal")
-    return reconstruct_path(came_from, goal)
+    return reconstruct_path(came_from, goal), goal
 
 
 def print_grid_with_path_and_direction(
@@ -186,14 +186,14 @@ def path_to_actions(path: Sequence[Tuple[int, int, int]],
         if turn == 0:
             control_actions.extend(additional)
         elif turn == 1 or turn == -3:
-            control_actions.append(actions.left)
+            control_actions.append(actions.right)
             control_actions.extend(additional)
         elif turn == 2 or turn == -2:
             control_actions.extend(
                 [actions.right, actions.right])
             control_actions.extend(additional)
         elif turn == 3 or turn == -1:
-            control_actions.append(actions.right)
+            control_actions.append(actions.left)
             control_actions.extend(additional)
 
     return control_actions

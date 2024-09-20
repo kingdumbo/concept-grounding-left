@@ -11,7 +11,7 @@ sys.path.append(current_dir)
 
 from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS, OBJ_BOOL_PROPS, OBJ_PROPS
 from actor import Actor
-from mini_behavior.envs.cleaning_up_the_kitchen_only import CleaningUpTheKitchenOnlyEnv
+from gym_minigrid.wrappers import *
 from concepts.dsl.dsl_functions import Function, FunctionTyping
 from concepts.dsl.dsl_types import ObjectType, BOOL, INT64, Variable
 from concepts.dsl.function_domain import FunctionDomain
@@ -134,12 +134,7 @@ class Scenegraph:
                 # and color accordingly
                 color = "blue"
                 if obj.is_furniture():
-                    # add edge between furniture and agent
-                    #self.sg.add_edge(id, self.robot_id, near=True)
                     color = "green"
-
-                    # add to value store 
-                    #self.set_attr_for_id("near", 1, id, self.robot_id, symmetric=True)
 
                 self.sg_color_map.append(color)
     
@@ -613,7 +608,16 @@ class Scenegraph:
 
 
 if __name__ == "__main__":
-    env = CleaningUpTheKitchenOnlyEnv()
+    env_strings = [
+        "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0",
+        "MiniGrid-CollectMisplacedItems-16x16-N2-v0",
+        'MiniGrid-OrganizingFileCabinet-16x16-N2-v0',
+        "MiniGrid-CleaningACar-16x16-N2-v0"
+    ]
+    env = gym.make(env_strings[0])
+    seed = 1
+    env.seed(seed)
+    env.reset()
     sg = Scenegraph(env)
     sg.update()
     domain = sg.get_domain()

@@ -166,11 +166,12 @@ class Actor:
         return output
     
     def navigate_to(self, target_position, look_at=True):
-        attempted_pos_orient = (*target_position, 0)
+        dir_mapper = {0: 1, 1: 2, 2: 3, 3: 0}
+        attempted_pos_orient = (*target_position[::-1], 0)
         try:
-            start = (*self.env.agent_pos, self.env.agent_dir)
+            start = (*self.env.agent_pos[::-1], dir_mapper[self.env.agent_dir])
             grid = self._get_grid()
-            path = grid_planner.a_star_search_modified(grid, start, attempted_pos_orient)
+            path, actual_goal = grid_planner.a_star_search_modified(grid, start, attempted_pos_orient)
             grid_planner.print_grid_with_path_and_direction(grid, start, attempted_pos_orient, path)
             path_actions = grid_planner.path_to_actions(path, self.actions)
             for action in path_actions:
@@ -178,6 +179,8 @@ class Actor:
                 if self.renderer:
                     self.renderer._redraw()
                 time.sleep(self.time_per_step)
+            if not np.all(self.env.agent_pos[::-1] == actual_goal[:2]):
+                return False
             return True
         except IndexError as e:
             print(e)
@@ -193,6 +196,7 @@ class Actor:
             for j in range(height):
                 if behavior_grid.is_empty(i,j):
                     grid[i,j] = 0
+        grid = np.transpose(grid)
         return grid
 
 

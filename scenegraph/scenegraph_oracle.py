@@ -11,6 +11,7 @@ sys.path.append(os.path.join(current_dir, '..'))
 sys.path.append(current_dir)
 
 from scenegraph import Scenegraph
+from gpt_prompting import PromptingOpenAI
 from utils import load_questionbank
 from left.models.model import LeftModel
 from typing import Optional, Union, List, Dict
@@ -123,30 +124,65 @@ class ScenegraphOracle(LeftModel):
         
 
 if __name__ == "__main__":
-    # env = CleaningUpTheKitchenOnlyEnv()
     from gym_minigrid.wrappers import *
+    
+    # LLM seeds
+    llm_seeds = [123123,1232,123544]
+    env_seed = 1
+
+    # prepare env
     env = gym.make("MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0")
+    env.seed(env_seed)
     env.reset()
     sg = Scenegraph(env)
     sg.update()
-    sg.render()
+    sg.render(fancy_vis=True)
     domain = sg.get_domain()
     domain.print_summary()
 
     # load processed question bank
     from pathlib import Path
-    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_processed.json"
+    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_raw.json"
     questionbank = load_questionbank(qb_filepath)
 
+    # init oracle
     oracle = ScenegraphOracle(domain, sg)
-    output = oracle.tell(questionbank)
-    acc = oracle.get_accuracy(output)
-    print(acc)
-    print(oracle.summarize_output(output, save_to_csv=True, only_false_answers=False).head())
-    sg.render()
 
-    while True:
-        raw_parsing=input()
-        qa = [{"raw_parsing": raw_parsing, "question":"", "answer": ""}]
-        output = oracle.tell(qa)
-        print(oracle.summarize_output(output, save_to_csv=False, only_false_answers=False).head())
+    # init llm client
+    config = {
+        "model":"gpt-4o-mini",
+        "max_tokens": 256,
+        "temperature": 0.2,
+        "top_p": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "response_format": {"type": "text"}
+    }
+
+    llm_client = PromptingOpenAI(
+        high_level_prompt_filename="system_prompt_2_1.txt",
+        initial_prompt_filename="system_prompt_2_1.txt",
+        second_prompt_template_filename="system_prompt_2_2_template.txt",
+        scenegraph=sg,
+        config=config
+    )
+
+    # storage
+    data = []
+
+    for seed in llm_seeds[::7]:
+        for q in questionbank: 
+            raw_parsing = llm_client.to_raw_parsing(q["question"], seed=seed) 
+            q["raw_parsing"] = raw_parsing
+            output = oracle.tell([q])
+            q["pred_answer"] = output["pred_answer"][0]
+            q["seed"] = seed
+            data.append(q)
+            print(q)
+
+    # save data as df
+    df = pd.DataFrame(data)
+    current_file_path = os.path.abspath(__file__)
+    directory = os.path.join(os.path.dirname(current_file_path), 'analysis', 'data')
+    file_path = os.path.join(directory, 'data_qa.csv')
+    df.to_csv(file_path, index=False)
