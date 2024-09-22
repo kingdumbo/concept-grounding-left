@@ -170,9 +170,9 @@ if __name__ == "__main__":
     # storage
     data = []
 
-    for seed in llm_seeds[::7]:
+    for seed in llm_seeds:
         for q in questionbank: 
-            raw_parsing = llm_client.to_raw_parsing(q["question"], seed=seed) 
+            raw_parsing = llm_client.to_raw_parsing(q["question"], seed=seed, apply_correction=False) 
             q["raw_parsing"] = raw_parsing
             output = oracle.tell([q])
             q["pred_answer"] = output["pred_answer"][0]

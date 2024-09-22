@@ -1,30 +1,164 @@
 [
         {
             "question": "How many robots are there?",
-            "answer": "1"
+            "answer": "1",
+            "type": "COUNT",
+            "difficulty": 1
         },
         {
-            "question": "How many things are inside the refrigerator?",
-            "answer": "4"
+            "question": "How many dusty things are there?",
+            "answer": "1",
+            "type": "COUNT",
+            "difficulty": 1
         },
         {
             "question": "How many objects are in front of the robot?",
-            "answer": "6"
+            "answer": "6",
+            "type": "COUNT",
+            "difficulty": 1
         },
         {
-            "question": "Is there an object in front of the robot, which is also next to another object?",
-            "answer": "yes"
+          "question": "How many white objects are inside cabinets?",
+          "answer": "3",
+          "type": "COUNT",
+          "difficulty": 2
+        },
+        {
+          "question": "How many bins are in the same room as the robot?",
+          "answer": "1",
+          "type": "COUNT",
+          "difficulty": 2
+        },
+        {
+          "question": "How many rags are next to the dustpan? ",
+          "answer": "1",
+          "type": "COUNT",
+          "difficulty": 2
+        },
+        {
+          "question": "How many white soaps are inside a cabinet? ",
+          "answer": "1",
+          "type": "COUNT",
+          "difficulty": 3
+        },
+        {
+          "question": "How many sinks are next to a plate and next to a bin? ",
+          "answer": "1",
+          "type": "COUNT",
+          "difficulty": 3
+        },
+        {
+          "question": "How many white cleaning tools are in the same room as the robot? ",
+          "answer": "2",
+          "type": "COUNT",
+          "difficulty": 3
+        },
+        {
+            "question": "Is there a broom?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 1
         },
         {
             "question": "Is there a cleaning tool?",
-            "answer": "yes"
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 1
         },
         {
-            "question": "How many stainable things are there, that are also on the floor?",
-            "answer": "2"
+            "question": "Is there a sink?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 1
         },
         {
-            "question": "What is the color of the apple in the room?",
-            "answer": "2"
+            "question": "Is there a frozen apple?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 2
+        },
+        {
+            "question": "Is there a vegetable oil inside the fridge?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 2
+        },
+        {
+            "question": "Is there a bin in front of the robot?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 2
+        },
+        {
+            "question": "Is there a brown rag inside the cabinet?",
+            "answer": "no",
+            "type": "BOOL",
+            "difficulty": 3
+        },
+        {
+            "question": "Is there a rag in the same room as the robot and next to a dustpan?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 3
+        },
+        {
+            "question": "Is there a white plate next to the casserole?",
+            "answer": "yes",
+            "type": "BOOL",
+            "difficulty": 3
+        },
+        {
+            "question": "What is the color of the apple?",
+            "answer": "white",
+            "type": "DESCRIBE",
+            "difficulty": 1
+        },
+        {
+            "question": "What is the name of the blender?",
+            "answer": "blender_0",
+            "type": "DESCRIBE",
+            "difficulty": 1
+        },
+        {
+            "question": "What is the type of the broom?",
+            "answer": "broom",
+            "type": "DESCRIBE",
+            "difficulty": 1
+        },
+        {
+            "question": "What is the name of the blue sink?",
+            "answer": "sink_0",
+            "type": "DESCRIBE",
+            "difficulty": 2
+        },
+        {
+            "question": "What is the color of the vegetable oil inside the fridge?",
+            "answer": "white",
+            "type": "DESCRIBE",
+            "difficulty": 2
+        },
+        {
+            "question": "What is the color of the soap in the same room as the robot?",
+            "answer": "white",
+            "type": "DESCRIBE",
+            "difficulty": 2
+        },
+        {
+            "question": "What is the color of the soap in the same room as the robot inside the cabinet?",
+            "answer": "white",
+            "type": "DESCRIBE",
+            "difficulty": 3
+        },
+        {
+            "question": "What is the name of the dustpan next to the rag and next to the soap?",
+            "answer": "dustpan_0",
+            "type": "DESCRIBE",
+            "difficulty": 3
+        },
+        {
+            "question": "What is the type of the slice and frozen thing inside the fridge?",
+            "answer": "apple",
+            "type": "DESCRIBE",
+            "difficulty": 3
         }
 ]

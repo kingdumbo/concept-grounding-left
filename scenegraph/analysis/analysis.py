@@ -5,46 +5,86 @@ import pathlib
 
 try:
     DATA_DIR = str(pathlib.Path(__file__).parent / "data")
+    PLOT_DIR = str(pathlib.Path(__file__).parent / "plots")
 except:
     DATA_DIR = "./scenegraph/analysis/data"
+    PLOT_DIR = "./scenegraph/analysis/plots"
+
 
 ## QA EXPERIMENT ##
-data = pd.read_csv(DATA_DIR + "/data_qa.csv")
+data_qa = pd.read_csv(DATA_DIR + "/data_qa.csv")
+data_qa_corrected = pd.read_csv(DATA_DIR + "/data_qa_corrected.csv")
 
-# Modify the 'outcome' column logic to handle NaN values in 'pred_answer'
-data['outcome'] = data.apply(lambda row: 'failed' if pd.isna(row['pred_answer']) 
-                             else 'correct' if row['pred_answer'] == row['answer'] 
-                             else 'incorrect', axis=1)
+# add column corrected
+data_qa["corrected"] = False
+data_qa_corrected["corrected"] = True
 
-# First, we aggregate the data by 'difficulty' and 'outcome'
-difficulty_agg = data.groupby(['difficulty', 'outcome']).size().unstack(fill_value=0)
+# Combine the datasets
+combined_data = pd.concat([data_qa, data_qa_corrected], ignore_index=True)
 
-# Then, aggregate the data by 'type' and 'outcome'
-type_agg = data.groupby(['type', 'outcome']).size().unstack(fill_value=0)
+# Define the outcome based on the conditions provided
+combined_data['outcome'] = combined_data.apply(
+    lambda row: 'failed parsing' if pd.isna(row['pred_answer']) else 
+                'correct' if row['pred_answer'] == row['answer'] else 
+                'incorrect', axis=1)
 
-# Combine the data into one DataFrame, treating both 'difficulty' and 'type' as categories
-combined_agg = pd.concat([difficulty_agg, type_agg], keys=['Difficulty', 'Type']).reset_index(level=0).rename(columns={'level_0': 'Category'})
+# Define consistent colors for outcomes
+colors = {
+    'correct': 'green',
+    'incorrect': 'red',
+    'failed parsing': 'blue'
+}
 
-# Modify the x-axis ticks to slant and append labels to 'difficulty' and 'type'
-combined_agg.index = combined_agg.index.map(lambda x: f"{x} (difficulty)" if combined_agg.loc[x, 'Category'] == 'Difficulty' else f"{x} (type)")
+# First group: Filter where corrected is False, aggregate by difficulty
+group1 = combined_data[combined_data['corrected'] == False].groupby(['difficulty', 'outcome']).size().unstack(fill_value=0)
+group1_percent = group1.div(group1.sum(axis=1), axis=0) * 100
 
-# Create a single plot with the bars for 'Type' first and 'Difficulty' next, with the new labels
-fig, ax = plt.subplots(figsize=(10, 6))
+# Second group: Filter where corrected is False, aggregate by type
+group2 = combined_data[combined_data['corrected'] == False].groupby(['type', 'outcome']).size().unstack(fill_value=0)
+group2_percent = group2.div(group2.sum(axis=1), axis=0) * 100
 
-# Plot the combined data as a stacked bar chart
-combined_agg.plot(kind='bar', stacked=True, ax=ax)
+# Third group: Aggregate by corrected
+group3 = combined_data.groupby(['corrected', 'outcome']).size().unstack(fill_value=0)
+group3_percent = group3.div(group3.sum(axis=1), axis=0) * 100
 
-# Slant the ticks on the x-axis
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+# Create three subplots with shared y-axis
+fig, axes = plt.subplots(1, 3, figsize=(12, 5), sharey=True)
 
-# Adjust labels and title
-ax.set_title('Outcome Aggregated by Difficulty and Type')
-ax.set_ylabel('Count')
-ax.set_xlabel('Categories (Type and Difficulty)')
+# First subplot: Aggregated by difficulty
+group1_percent.plot(kind='bar', stacked=True, ax=axes[0], color=[colors[outcome] for outcome in group1.columns], legend=False)
+axes[0].set_title('Aggregated by Difficulty')
+axes[0].set_xlabel('Difficulty')
+axes[0].set_ylabel('Percentage (%)')
+axes[0].tick_params(axis='x', rotation=0)  # Set x-axis labels to horizontal
 
-# Adjust the layout and show the plot
-plt.tight_layout()
+# Second subplot: Aggregated by type
+group2_percent.plot(kind='bar', stacked=True, ax=axes[1], color=[colors[outcome] for outcome in group2.columns], legend=False)
+axes[1].set_title('Aggregated by Type')
+axes[1].set_xlabel('Type')
+axes[1].tick_params(axis='x', rotation=0)  # Set x-axis labels to horizontal
+
+# Third subplot: Aggregated by corrected status
+group3_percent.plot(kind='bar', stacked=True, ax=axes[2], color=[colors[outcome] for outcome in group3.columns], legend=True)
+axes[2].set_title('Aggregated by Corrected Status')
+axes[2].set_xlabel('Corrected')
+axes[2].tick_params(axis='x', rotation=0)  # Set x-axis labels to horizontal
+
+# Set a single shared legend
+handles = [plt.Line2D([0], [0], color=colors[outcome], lw=4) for outcome in ['correct', 'incorrect', 'failed parsing']]
+labels = ['Correct', 'Incorrect', 'Failed Parsing']
+#handles, labels = axes[0].get_legend_handles_labels()
+#breakpoint()
+# Add the figure-level legend
+fig.legend(handles, labels, title='Outcome', loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
+# Set a tight layout for better readability
+#plt.tight_layout()
+
+# save
+plt.savefig(PLOT_DIR + "/qa.png")
+
+# Show the plot
 plt.show()
+
 
 ## MAIN EXPERIMENT ##
 data = pd.read_csv(DATA_DIR + "/data_main.csv")
@@ -53,9 +93,9 @@ data.head()
 
 # simplfy env columns# Example translation dictionary
 translation_dict = {
-    'MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0': 'Kitchen',
-    'MiniGrid-AnotherEnvironment-16x16-N2-v0': 'Another Env',
-    # Add more translations as needed
+    'MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0': 'CleaningUpTheKitchenOnly',
+    "MiniGrid-CollectMisplacedItems-16x16-N2-v0": "CollectMisplacedItems",
+    "MiniGrid-OrganizingFileCabinet-16x16-N2-v0": "OrganizingFileCabinet"
 }
 
 # Applying the translation to the 'env' column using the dictionary
@@ -70,10 +110,12 @@ non_success_data = data[data['final_output'] != 'Success']
 non_success_final_output_counts = non_success_data['final_output'].value_counts()
 
 # Plot the pie chart for non-success final outputs
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(7,7))
 plt.pie(non_success_final_output_counts, labels=non_success_final_output_counts.index, autopct='%1.1f%%', startangle=90)
 plt.title('Reasons for Task Abortion')
 plt.axis('equal')
+# save
+plt.savefig(PLOT_DIR + "/failure_reasons.png")
 plt.show()
 
 
@@ -110,17 +152,18 @@ for i, title in enumerate(titles):
                 yerr=row['passing_conds_std'], capsize=5)  # Adding error bars for passing conditions
 
 # Customize the plot
-plt.title('Success Conditions and Passing Conditions by Task and Difficulty')
+plt.title('Success conditions and passed success conditions onditions by task and difficulty')
 plt.xlabel('Task')
-plt.ylabel('Number of Conditions')
+plt.ylabel('Number of success conditions')
 plt.xticks(range(len(titles)), titles, rotation=45, ha='right')  # Slanting the labels for easier reading
 plt.grid(True, axis='y')
 
 # Custom legend for difficulty levels with new color palette
 custom_legend = [plt.Line2D([0], [0], color=color, lw=4) for color in new_colors.values()]
-plt.legend(custom_legend, [f'Difficulty {lvl}' for lvl in new_colors.keys()], title='Passing Conditions Difficulty')
+plt.legend(custom_legend, [f'Difficulty {lvl}' for lvl in new_colors.keys()], title='High-level task difficulty:')
 
 plt.tight_layout()
+plt.savefig(PLOT_DIR + "/success_conditions.png")
 plt.show()
 
 # ANALYZE STEPS UNTIL FAILURE PER ENV, DIFFICULTY LEVEL
@@ -162,4 +205,5 @@ plt.xticks(rotation=45, ha='right')  # Slant the labels for easier readability
 plt.grid(True, axis='y')
 
 plt.tight_layout()
+plt.savefig(PLOT_DIR + "/steps_to_failure.png")
 plt.show()
