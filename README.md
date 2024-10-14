@@ -38,7 +38,7 @@ Install [Concepts](https://github.com/concepts-ai/concepts).
 ### Other dependencies
 Some pip dependencies are necessary:
 ```bash
-  pip install networx opencv-python pyvis livereload fuzzywuzzy PyYAML peewee
+  pip install networkx opencv-python pyvis livereload fuzzywuzzy PyYAML peewee
 ```
 
 ### Mini-BEHAVIOR
