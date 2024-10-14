@@ -1,4 +1,3 @@
-
 # Grounding an LLM planner on a Scene Graph using the LEFT framework
 
 A project work for Intelligent Robot Manipulation at TU Darmstadt SS '24.
@@ -11,30 +10,47 @@ The full report can be found [here](https://www.notion.so/elenamax/Grounding-an-
 Start by cloning the repo using:
 
 ```bash
-  git clone https://github.com/kingdumbo/concept-grounding-left --recursive
+  git clone https://github.com/kingdumbo/concept-grounding-left
 ```
 Then navigate into the newly created folder. Set up your conda environment and install the dependencies:
 ```bash
-  conda env create -f environment.yaml
-  conda activate left
+  conda env create -f environment.yml
+  conda activate concept-grounding
 ```
-Then you need to install local dependencies:
+Then you need to install the dependencies *in order*:
 
-### Jacinle (for LEFT)
-Add Jacinle to your path:
+### For LEFT
+Put the Jacinle folder *at the root* of the project and add to the path:
+
+Install [Jacinle](https://github.com/vacancy/Jacinle).
 ```bash
+  git clone https://github.com/vacancy/Jacinle --recursive
   export PATH=<PATH_TO_JACINLE>/bin:$PATH
 ```
 
-### Concepts (for LEFT)
-Navigate to the folder ./Concepts and install locally:
+Install [Concepts](https://github.com/concepts-ai/concepts).
 ```bash
+  git clone https://github.com/concepts-ai/Concepts.git
+  cd Concepts
   pip install -e .
 ```
 
-### Mini-BEHAVIOR
-Navigate to the folder ./mini_behavior and install locally:
+### Other dependencies
+Some pip dependencies are necessary:
 ```bash
+  pip install networx opencv-python pyvis livereload fuzzywuzzy PyYAML peewee
+```
+
+### Mini-BEHAVIOR
+First, some dependencies:
+```bash
+pip install gym-minigrid==1.0.3
+pip install setuptools==65.5.0 "wheel<0.40.0" 
+pip install gym==0.21.0
+```
+And finally:
+```bash
+  cd mini_behavior
   pip install -e .
 ```
 
