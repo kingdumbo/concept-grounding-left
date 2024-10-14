@@ -1,80 +1,64 @@
-# Logic-Enhanced Foundation Model
+
+# Grounding an LLM planner on a Scene Graph using the LEFT framework
+
+A project work for Intelligent Robot Manipulation at TU Darmstadt SS '24.
+The full report can be found [here](https://www.notion.so/elenamax/Grounding-an-LLM-planner-on-a-Scene-Graph-using-the-LEFT-framework-44ed3ccc9aad4f5fa6006f4449e5e600).
 
 
-![figure](figure.png)
-<br />
-<br />
-**What’s *Left*? Concept Grounding with Logic-Enhanced Foundation Models**
-<br />
-[Joy Hsu](http://web.stanford.edu/~joycj/)\*,
-[Jiayuan Mao](http://jiayuanm.com/)\*,
-[Joshua B. Tenenbaum](http://web.mit.edu/cocosci/josh.html),
-[Jiajun Wu](https://jiajunwu.com/)
-<br />
-In Conference on Neural Information Processing Systems (NeurIPS) 2023
-<br />
 
-[[paper](https://arxiv.org/abs/2310.16035)]  [[project page](https://web.stanford.edu/~joycj/projects/left_neurips_2023.html)] [[colab](https://colab.research.google.com/drive/1PHHvjImk7IK2m48j1TkCywxAYr7MatUT?usp=sharing)]
+## Installation
 
-## Colab
-Run this [colab](https://colab.research.google.com/drive/1PHHvjImk7IK2m48j1TkCywxAYr7MatUT?usp=sharing) to train and evaluate LEFT on a new dataset in ~100 lines of code! Additionally, try out this [colab](https://colab.research.google.com/drive/1b0Bzlyr05GS01phCDfnggVB54Zr-y9Sy?usp=sharing) to evaluate LEFT on one of our trained domains.
+Start by cloning the repo using:
 
-## Setup
-Run the following commands to setup LEFT.
-
-Make a new conda environment.
 ```bash
-  conda create -n left python=3.10
+  git clone https://github.com/kingdumbo/concept-grounding-left --recursive
+```
+Then navigate into the newly created folder. Set up your conda environment and install the dependencies:
+```bash
+  conda env create -f environment.yaml
   conda activate left
 ```
+Then you need to install local dependencies:
 
-Install [Jacinle](https://github.com/vacancy/Jacinle).
+### Jacinle (for LEFT)
+Add Jacinle to your path:
 ```bash
-  git clone https://github.com/vacancy/Jacinle --recursive
   export PATH=<PATH_TO_JACINLE>/bin:$PATH
 ```
 
-Install [Concepts](https://github.com/concepts-ai/concepts).
+### Concepts (for LEFT)
+Navigate to the folder ./Concepts and install locally:
 ```bash
-  git clone https://github.com/concepts-ai/Concepts.git
-  cd Concepts
   pip install -e .
 ```
 
-Install the following libraries.
+### Mini-BEHAVIOR
+Navigate to the folder ./mini_behavior and install locally:
 ```bash
-  pip install PyYAML
-  pip install peewee
+  pip install -e .
 ```
 
-Note: you may need to install a PyTorch version that has been compiled with your version of the CUDA driver. For example, `conda install pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch`.
+## Environment Variables
 
-## Demo
-Check out this [demo notebook](starter-simple-shapes.ipynb) to apply LEFT on a new dataset in ~100 lines of code! See the same notebook in [colab](https://colab.research.google.com/drive/1PHHvjImk7IK2m48j1TkCywxAYr7MatUT?usp=sharing) form as well. 
+To run this project, you will need to add the following environment variables to your .env file
 
-Install the following libraries to run the demo.
+`OPENAI_API_KEY`
+
+
+## Run Locally
+
+To re-run the experiments, you should be in the top-directory of the project and run with the environment activated:
+
+### Scene Graph Interrogation
 ```bash
-  conda install -c conda-forge notebook
-  pip install opencv-python
+  python scenegraph/scenegraph_oracle.py
 ```
 
-You may need to add the below import in the demo notebook.
+### Long-horizon Task Execution
 ```bash
-  import sys
-  sys.path.append("<PATH_TO_JACINLE>")
+    python scenegraph/llm_actor.py
 ```
+## Authors
 
-## Train & evaluation
-Please see the individual READMEs to train and evaluate models. 
-
-Install the following library to train models.
-```bash
-  conda install tensorflow
-  pip install chardet
-```
-
-Note: Before running train & eval commands, set `export PATH=<PATH_TO_JACINLE>/bin:$PATH`.
-
-## Warning
-LEFT leverages a pre-trained large language model as its language interpreter, and hence, even though our prompts are general examples of first-order logic, we do not have direct control over the LLM's generation. The LLM may output harmful biases.
+- [@Max Schindler](https://github.com/kingdumbo)
 

@@ -1,6 +1,0 @@
-,question,raw_parsing,answer,pred_answer
-0,How many objects are in front of the robot?,"count(Object, lambda x: infovofrobot(x))",6,6
-1,"Is there an object in front of the robot, which is also next to another object?","exists(Object, lambda x: and infovrobot(x) and nextto(x, iota(Object, lambda y: cat(y))))",yes,
-2,Is there a cleaning tool?,"exists(Object, lambda x: cleaning_tool(x))",yes,
-3,"How many stainable things are there, that are also on the floor?","count(Object, lambda x: iota(Object, lambda y: and stainable(y) and onFloor(y)))",2,
-4,What is the color of the apple in the room?,"describe(Color, iota(Object, lambda y: apple(y)))",2,

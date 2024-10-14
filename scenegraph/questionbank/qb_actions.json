@@ -1,7 +1,0 @@
-[
-    {
-        "question": "Pick up the bin.",
-        "answer": "",
-        "raw_parsing": "execute(Action, lambda k: pick(k, iota(Object, lambda y: bin(y))))"
-    }
-]

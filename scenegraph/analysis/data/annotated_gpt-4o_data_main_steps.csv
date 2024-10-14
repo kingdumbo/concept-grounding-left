@@ -1,0 +1,454 @@
+command,raw_parsing,output,Reason,reward,task_done,task_number,difficulty,step_number
+Pick up the broom_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y))))",Success,,0,False,0,1,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,0,1,1
+Pick up the broom next to the blender,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: blender(z))))))",Success,,0,False,0,2,0
+Place at the cabinet at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,2,1
+Pick up the broom next to the blender,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: blender(z))))))",Success,,0,False,0,3,0
+Place at the cabinet at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,3,1
+Pick up the broom next to the blender,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: blender(z))))))",Success,,0,False,1,1,0
+Pick up the rag on top of the cabinet,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag(y) and ontop(y, iota(Object, lambda z: cabinet(z))))))",No valid target,,0,False,1,1,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,2,0
+Pick up the soap_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: soap(y) and inside(y, iota(Object, lambda z: cabinet(z))))))",Failure,,0,False,1,2,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,3,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,3,1
+Pick up the broom next to the blender,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: blender(z))))))",Success,,0,False,2,1,0
+Pick up the blender next to the broom,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender(y) and nextto(y, iota(Object, lambda z: broom(z))))))",No valid target,,0,False,2,1,1
+Pick up the broom next to the blender,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: blender(z))))))",Success,,0,False,2,2,0
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,2,2,1
+Pick up the blender next to the broom,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender(y) and nextto(y, iota(Object, lambda z: broom(z))))))",No valid target,,0,False,2,2,2
+Pick up the soap_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: soap_0(y))))",Success,,0,False,2,3,0
+Pick up the rag_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y))))",Failure,,0,False,2,3,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,1,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,2,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,3,0
+Pick up the vegetable oil inside the electric refrigerator,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,4,1,0
+Pick up the plate inside the electric refrigerator,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Failure,,0,False,4,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,2,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,3,0
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Success,,0,False,5,1,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,5,1,1
+Pick up the white necklace on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and onfloor(y))))",Success,,0,False,5,2,0
+Place at the table at the same location as the notebook,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: notebook(z))))))",Success,,0,False,5,2,1
+Pick up the white necklace on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and onfloor(y))))",Success,,0,False,5,3,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,5,3,1
+Pick up the sock next to table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and nextto(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,6,1,0
+Pick up the sock on top of sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa_0(z)))))",Failed parsing,braces,0,False,6,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,6,2,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,6,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,6,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,6,3,1
+Pick up the sock next to table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and nextto(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,7,1,0
+Pick up the sock on sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,7,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,7,2,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,7,2,1
+Pick up the gym_shoe_0 on the floor next to cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and onfloor(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,7,3,0
+Pick up the sock_0 on the floor next to sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and onfloor(y) and nextto(y, iota(Object, lambda z: sofa_0(z))))))",No valid target,,0,False,7,3,1
+Pick up the notebook on the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and on(y, iota(Object, lambda z: table_1(z))))))",Failed parsing,on,0,False,8,1,0
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,2,0
+Place at the table_0 at the same location as the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,8,2,1
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,3,0
+Place at the table_0 at the same location as the table,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: table(z))))))",Failure,,0,False,8,3,1
+Pick up the sock next to table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and nextto(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,9,1,0
+Pick up the sock on top of sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa_0(z)))))",Failed parsing,braces,0,False,9,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,9,2,0
+Pick up the sock_0 next to the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and nextto(y, iota(Object, lambda z: sofa_0(z))))))",No valid target,,0,False,9,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,9,3,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,9,3,1
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Success,,0,False,9,3,2
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,9,3,3
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,9,3,4
+Place at the table_1,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_1(y))))",Success,,0,False,9,3,5
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,9,3,6
+Pick up the sock next to table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and nextto(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,10,1,0
+Pick up the sock on top of sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa_0(z)))))",Failed parsing,braces,0,False,10,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,10,2,0
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Failure,,0,False,10,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,10,3,0
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Failure,,0,False,10,3,1
+Pick up the white marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,11,1,0
+Pick up the white marker at the same location as the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair(z))))))",Success,,0,False,11,2,0
+Place at the table at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: document(z))))))",Success,,0,False,11,2,1
+Pick up the white marker at the same location as the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair(z))))))",Success,,0,False,11,3,0
+Place at the table at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: document(z))))))",Success,,0,False,11,3,1
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,1,0
+Pick up document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,2,0
+Pick up document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,3,0
+Pick up the document_1 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,13,1,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,1,0
+Pick up the white marker on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: white(y) and marker(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,1,0
+Pick up the white marker at the same location as the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair(z))))))",Success,,0,False,15,2,0
+Place at the table at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: document(z))))))",Success,,0,False,15,2,1
+Pick up the white document at the same location as the table,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document(y) and white(y) and atsamelocation(y, iota(Object, lambda z: table(z))))))",Failure,,0,False,15,2,2
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,3,0
+Pick up the broom in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,0,1,0
+Place at the cabinet at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,1,1
+Pick up the broom in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,0,2,0
+Place at the cabinet at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,2,1
+Pick up the broom in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,0,3,0
+Place at the cabinet at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,3,1
+Pick up the broom in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,1,1,0
+Pick up the rag inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,1,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,2,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,2,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,3,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,3,1
+Pick up the broom in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,2,1,0
+Pick up the blender in the same room as the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender(y) and inroom(y, iota(Object, lambda z: robot(z))))))",Failed parsing,inroom,0,False,2,1,1
+Pick up the broom_0 next to the sink_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y) and nextto(y, iota(Object, lambda z: sink_0(z))))))",Success,,0,False,2,2,0
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,2,2,1
+Pick up the blender_0 in the same room as the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender_0(y) and inroom(y, iota(Object, lambda z: robot(z))))))",Failed parsing,inroom,0,False,2,2,2
+Pick up the soap_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: soap(y) and inside(y, iota(Object, lambda z: cabinet(z))))))",Success,,0,False,2,3,0
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,2,3,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,1,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,2,0
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,3,2,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,2,2
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,3,2,3
+Pick up the vegetable_oil inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,2,4
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Failure,,0,False,3,2,5
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,0
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Success,,0,False,3,3,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,2
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Success,,0,False,3,3,3
+Pick up the vegetable_oil inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,3,4
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Success,,0,False,3,3,5
+Pick up the apple inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: apple(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,6
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Failure,,0,False,3,3,7
+Pick up the vegetable oil inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,4,1,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,4,2,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,2,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,4,3,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,3,1
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Success,,0,False,5,1,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,5,1,1
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Success,,0,False,5,2,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,5,2,1
+Pick up the white necklace on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and on(y, iota(Object, lambda z: floor(z))))))",Failed parsing,on,0,False,5,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,6,1,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,6,2,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,6,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,7,1,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,7,2,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,7,3,0
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Failure,,0,False,8,1,0
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Failure,,0,False,8,2,0
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Failure,,0,False,8,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,9,1,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,9,2,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,9,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,10,1,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,10,2,0
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,10,3,0
+Pick up the white marker inside the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and inside(y, iota(Object, lambda z: chair_0(z))))))",No valid target,,0,False,11,1,0
+Pick up the white marker next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,11,2,0
+Place at the table_0 at the same location as the document_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: document_0(z))))))",Success,,0,False,11,2,1
+Pick up the white marker next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,11,3,0
+Place at the table_0 at the same location as the document_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: document_0(z))))))",Success,,0,False,11,3,1
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,1,0
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,2,0
+Pick up document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,3,0
+Pick up the document_1 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,13,1,0
+Pick up the marker_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y))))",Success,,0,False,13,2,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,13,2,1
+Pick up the document_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y))))",Success,,0,False,13,2,2
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Failure,,0,False,13,2,3
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,1,0
+Pick up the white marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,14,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,1,0
+Pick up the white marker next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,15,2,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,15,2,1
+Pick up the white document_0 next to the folder_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and white(y) and nextto(y, iota(Object, lambda z: folder_0(z))))))",Success,,0,False,15,2,2
+Pick up the white document_2 next to the document_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_2(y) and white(y) and nextto(y, iota(Object, lambda z: document_0(z))))))",Type of action cannot be performed,,0,False,15,2,3
+Pick up the marker_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y))))",Success,,0,False,15,3,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,15,3,1
+Pick up the document_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y))))",Success,,0,False,15,3,2
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,15,3,3
+Pick up the document_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y))))",Success,,0,False,15,3,4
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,15,3,5
+Pick up the document_2,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_2(y))))",Success,,0,False,15,3,6
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,15,3,7
+Pick up the document_3,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_3(y))))",Success,,0,False,15,3,8
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Failure,,0,False,15,3,9
+Pick up the broom next to the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,0,1,0
+Place at the cabinet_0 at the same location as the soap_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y) and atsamelocation(y, iota(Object, lambda z: soap_0(z))))))",Success,,0,False,0,1,1
+Pick up the broom next to the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,0,2,0
+Place at the cabinet_0 at the same location as the soap_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y) and atsamelocation(y, iota(Object, lambda z: soap_0(z))))))",Success,,0,False,0,2,1
+Pick up the broom next to the electric refrigerator,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,0,3,0
+Place at the cabinet at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,3,1
+Pick up the broom next to the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,1,1,0
+Pick up the rag inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,1,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,2,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,2,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,3,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,3,1
+Pick up the broom next to the electric refrigerator,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,2,1,0
+Pick up the blender next to the cabinet_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender(y) and nextto(y, iota(Object, lambda z: cabinet_1(z))))))",Failure,,0,False,2,1,1
+Pick up the casserole next to the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",No valid target,,0,False,2,2,0
+Pick up the soap_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: soap_0(y))))",Success,,0,False,2,3,0
+Pick up the rag_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y))))",Failure,,0,False,2,3,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,1,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,2,0
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,3,2,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,2,2
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,3,2,3
+Pick up the vegetable_oil inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,2,4
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Failure,,0,False,3,2,5
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,0
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Success,,0,False,3,3,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,2
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Success,,0,False,3,3,3
+Pick up the vegetable_oil inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,3,4
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Success,,0,False,3,3,5
+Pick up the apple inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: apple(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,6
+Place at the bin_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: bin_0(y))))",Failure,,0,False,3,3,7
+Pick up the vegetable oil next to the electric refrigerator,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",No valid target,,0,False,4,1,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,4,2,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,2,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,4,3,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,3,1
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Success,,0,False,5,1,0
+Place at the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y))))",Success,,0,False,5,1,1
+Pick up the white necklace on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and onfloor(y))))",Success,,0,False,5,2,0
+Place at the table at the same location as the notebook,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: notebook(z))))))",Success,,0,False,5,2,1
+Pick up the white necklace on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and on(y, iota(Object, lambda z: floor(z))))))",Failed parsing,on,0,False,5,3,0
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,6,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,6,1,1
+Pick up the gym_shoe_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,6,2,0
+Pick up the gym_shoe_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,6,3,0
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,7,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,7,1,1
+Pick up the gym_shoe_0 at the same location as the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and atsamelocation(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,7,2,0
+Pick up the sock_0 at the same location as the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Failure,,0,False,7,2,1
+Pick up the gym_shoe_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y))))",Success,,0,False,7,3,0
+Pick up the sock_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y))))",Failure,,0,False,7,3,1
+Pick up the notebook under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,1,0
+Place at the table next to the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and nextto(y, iota(Object, lambda z: sofa_0(z))))))",No valid target,,0,False,8,1,1
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,2,0
+Place at the table_0 at the same location as the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,8,2,1
+Pick up the notebook under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,3,0
+Place at the table_0 at the same location as the table,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: table(z))))))",Failure,,0,False,8,3,1
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,9,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,9,1,1
+Pick up the gym_shoe_0 at the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and on(y, iota(Object, lambda z: cabinet_0(z))))))",Failed parsing,on,0,False,9,2,0
+Pick up the gym_shoe_0 at the same location as the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and atsamelocation(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,9,3,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,9,3,1
+Pick up the necklace_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y))))",Success,,0,False,9,3,2
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,9,3,3
+Pick up the notebook_0 at the same location as the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and atsamelocation(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,9,3,4
+Place at the table_1,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_1(y))))",Success,,0,False,9,3,5
+Pick up the sock_0 at the same location as the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,9,3,6
+Place at the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: sofa_0(y))))",Success,,0,False,9,3,7
+Pick up the sock_1 in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_1(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,9,3,8
+Place at the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: sofa_0(y))))",Success,,0,False,9,3,9
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,10,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,10,1,1
+Pick up the gym_shoe_0 at the same location as the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and atsamelocation(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,10,2,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,2,1
+Pick up the necklace_0 in the same room as the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and insameroom(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,10,2,2
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,2,3
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,10,2,4
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,2,5
+Pick up the sock_0 at the same location as the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,10,2,6
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Failure,,0,False,10,2,7
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,10,3,0
+Pick up the white marker_0 inside the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and inside(y, iota(Object, lambda z: chair(z))))))",No valid target,,0,False,11,1,0
+Pick up the white marker at the same location as the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair_0(z))))))",Success,,0,False,11,2,0
+Place at the table_0 at the same location as the document_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: document_0(z))))))",Success,,0,False,11,2,1
+Pick up the white marker at the same location as the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair_0(z))))))",Success,,0,False,11,3,0
+Place at the table_0 at the same location as the document_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: document_0(z))))))",Success,,0,False,11,3,1
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,1,0
+Pick up document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,2,0
+Pick up document_0 on top of table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and ontop(y, iota(Object, lambda z: table_0(z))))))",Success,,0,False,12,3,0
+Pick up document_2 on top of table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_2(y) and ontop(y, iota(Object, lambda z: table_0(z))))))",Failure,,0,False,12,3,1
+Pick up the document_1 on the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y) and on(y, iota(Object, lambda z: cabinet_0(z))))))",Failed parsing,on,0,False,13,1,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,1,0
+Pick up the white marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,14,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,1,0
+Pick up the white marker at the same location as the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair(z))))))",Success,,0,False,15,2,0
+Place at the table at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: document(z))))))",Success,,0,False,15,2,1
+Pick up the white document at the same location as the table,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document(y) and white(y) and atsamelocation(y, iota(Object, lambda z: table(z))))))",Failure,,0,False,15,2,2
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,3,0
+Pick up the broom_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y))))",Success,,0,False,0,1,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,0,1,1
+Pick up the broom_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y))))",Success,,0,False,0,2,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,0,2,1
+Pick up the broom_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y))))",Success,,0,False,0,3,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,0,3,1
+Pick up the broom_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y))))",Success,,0,False,1,1,0
+Pick up the rag_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y))))",Failure,,0,False,1,1,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,2,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,2,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,3,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,3,1
+Pick up the broom_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom_0(y))))",Success,,0,False,2,1,0
+Pick up the blender_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender_0(y))))",Failure,,0,False,2,1,1
+Pick up the casserole_0 next to the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",No valid target,,0,False,2,2,0
+Pick up the soap_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: soap(y) and inside(y, iota(Object, lambda z: cabinet(z))))))",Success,,0,False,2,3,0
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,2,3,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,1,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,2,0
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,3,2,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,2,2
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Success,,0,False,3,2,3
+Pick up the vegetable_oil inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,2,4
+Place at the countertop_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: countertop_0(y))))",Failure,,0,False,3,2,5
+Pick up the casserole_0 inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,3,0
+Pick up the plate_0 inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate_0(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,3,1
+Pick up the vegetable oil next to the electric refrigerator,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and nextto(y, iota(Object, lambda z: electric_refrigerator(z))))))",No valid target,,0,False,4,1,0
+Pick up the casserole_0 inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,4,2,0
+Pick up the plate_0 inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate_0(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,2,1
+Pick up the casserole_0 inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,4,3,0
+Pick up the plate_0 inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate_0(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,3,1
+Pick up the necklace next to the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and nextto(y, iota(Object, lambda z: sofa(z))))))",Success,,0,False,5,1,0
+Place at the table at the same location as the notebook,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: notebook(z))))))",Success,,0,False,5,1,1
+Pick up the white necklace next to the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and nextto(y, iota(Object, lambda z: sofa(z))))))",Success,,0,False,5,2,0
+Place at the table at the same location as the notebook,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: notebook(z))))))",Success,,0,False,5,2,1
+Pick up the white necklace next to the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and nextto(y, iota(Object, lambda z: sofa(z))))))",Success,,0,False,5,3,0
+Place at the cabinet at the same location as the gym_shoe,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: gym_shoe(z))))))",Success,,0,False,5,3,1
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Success,,0,False,6,1,0
+Pick up the sock in the same room as the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and insameroom(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,6,1,1
+Place at the cabinet at the same location as the gym_shoe_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and atsamelocation(y, iota(Object, lambda z: gym_shoe_0(z))))))",Success,,0,False,6,1,2
+Pick up the gym_shoe_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y))))",Success,,0,False,6,2,0
+Pick up the sock_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y))))",Failure,,0,False,6,2,1
+Pick up the gym_shoe_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,6,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,7,1,0
+Pick up the gym_shoe_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and onfloor(y))))",Success,,0,False,7,2,0
+Pick up the sock_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and onfloor(y))))",Failure,,0,False,7,2,1
+Pick up the gym_shoe_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and onfloor(y))))",Success,,0,False,7,3,0
+Pick up the sock_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: floor(z))))))",Failed parsing,on,0,False,7,3,1
+Pick up the notebook under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,1,0
+Place at the table next to the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and nextto(y, iota(Object, lambda z: sofa_0(z)))))",Failed parsing,braces,0,False,8,1,1
+Pick up the notebook under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,2,0
+Place at the table_0 at the same location as the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,8,2,1
+Pick up the notebook_0 under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,3,0
+Place at the table_0 at the same location as the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,8,3,1
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,9,1,0
+Pick up the gym_shoe_0 at the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and on(y, iota(Object, lambda z: cabinet_0(z))))))",Failed parsing,on,0,False,9,2,0
+Pick up the gym_shoe_0 at the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and on(y, iota(Object, lambda z: cabinet_0(z))))))",Failed parsing,on,0,False,9,3,0
+Pick up the sock_0 on the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and on(y, iota(Object, lambda z: sofa_0(z))))))",Failed parsing,on,0,False,10,1,0
+Pick up the gym_shoe_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and onfloor(y))))",Success,,0,False,10,2,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,2,1
+Pick up the necklace_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and onfloor(y))))",Success,,0,False,10,2,2
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,2,3
+Pick up the notebook_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook_0(y) and onfloor(y))))",Success,,0,False,10,2,4
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,2,5
+Pick up the sock_0 on the floor,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and onfloor(y))))",Success,,0,False,10,2,6
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Failure,,0,False,10,2,7
+Pick up the gym_shoe_0 at the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and on(y, iota(Object, lambda z: cabinet_0(z))))))",Failed parsing,on,0,False,10,3,0
+Pick up the white marker on the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,11,1,0
+Pick up the white marker at the same location as the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair(z))))))",Success,,0,False,11,2,0
+Place at the table at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: document(z))))))",Success,,0,False,11,2,1
+Pick up the white marker at the same location as the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair_0(z))))))",Success,,0,False,11,3,0
+Place at the table_0 at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: documents(z))))))",Failed parsing,documents,0,False,11,3,1
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,1,0
+Pick up document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,2,0
+Pick up document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,3,0
+Pick up the document_1 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,13,1,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,1,0
+Pick up the white marker on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: white(y) and marker(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,2,0
+Pick up the marker on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,1,0
+Pick up the white marker at the same location as the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair_0(z))))))",Success,,0,False,15,2,0
+Place at the table at the same location as the table_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: table_0(z))))))",Success,,0,False,15,2,1
+Pick up the white document at the same location as the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document(y) and white(y) and atsamelocation(y, iota(Object, lambda z: table_0(z))))))",Failure,,0,False,15,2,2
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,3,0
+Pick up the broom next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,0,1,0
+Place at the cabinet_0 at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,1,1
+Pick up the broom next to cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,0,2,0
+Place at the cabinet_0 at the same location as the soap_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y) and atsamelocation(y, iota(Object, lambda z: soap_0(z))))))",Success,,0,False,0,2,1
+Pick up the broom next to cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,0,3,0
+Place at the cabinet_0 at the same location as the soap,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y) and atsamelocation(y, iota(Object, lambda z: soap(z))))))",Success,,0,False,0,3,1
+Pick up the broom next to cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,1,0
+Pick up the rag on top of cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag(y) and ontop(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,1,1,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,2,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,2,1
+Pick up the rag_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,1,3,0
+Pick up the dustpan_0 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: dustpan_0(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",Failure,,0,False,1,3,1
+Pick up the broom next to cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,2,1,0
+Pick up the blender in the same room as the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: blender(y) and inroom(y, iota(Object, lambda z: robot(z))))))",Failed parsing,inroom,0,False,2,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,2,2,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,2,2,1
+Pick up the soap_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: soap_0(y))))",Success,,0,False,2,3,0
+Pick up the rag_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: rag_0(y))))",Failure,,0,False,2,3,1
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,1,0
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,1,1
+Pick up the casserole inside the electric refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,3,2,0
+Pick up the plate inside the electric refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,2,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,3,3,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,3,3,1
+Pick up the vegetable oil inside the electric refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: vegetable_oil(y) and inside(y, iota(Object, lambda z: electric_refrigerator(z))))))",Success,,0,False,4,1,0
+Pick up the plate inside the electric refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,1,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,4,2,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,2,1
+Pick up the casserole inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: casserole(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Success,,0,False,4,3,0
+Pick up the plate inside the electric_refrigerator_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: plate(y) and inside(y, iota(Object, lambda z: electric_refrigerator_0(z))))))",Failure,,0,False,4,3,1
+Pick up the necklace next to the cabinet,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and nextto(y, iota(Object, lambda z: cabinet(z))))))",Success,,0,False,5,1,0
+Place at the table at the same location as the notebook,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: notebook(z))))))",Success,,0,False,5,1,1
+Pick up the white necklace next to the cabinet,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace(y) and white(y) and nextto(y, iota(Object, lambda z: cabinet(z))))))",Success,,0,False,5,2,0
+Place at the table at the same location as the notebook,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: notebook(z))))))",Success,,0,False,5,2,1
+Pick up the necklace_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,5,3,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,5,3,1
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,6,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,6,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,6,2,0
+Pick up the sock_0 on top of the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and ontop(y, iota(Object, lambda z: sofa_0(z))))))",Failure,,0,False,6,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,6,3,0
+Pick up the sock_0 on top of the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and ontop(y, iota(Object, lambda z: sofa_0(z))))))",Failure,,0,False,6,3,1
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,7,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,7,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,7,2,0
+Pick up the sock_0 on top of the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and ontop(y, iota(Object, lambda z: sofa_0(z))))))",Failure,,0,False,7,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,7,3,0
+Pick up the sock_0 on top of the sofa_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock_0(y) and ontop(y, iota(Object, lambda z: sofa_0(z))))))",Failure,,0,False,7,3,1
+Pick up the notebook under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,1,0
+Place at the table next to the sofa_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and nextto(y, iota(Object, lambda z: sofa_0(z))))))",Success,,0,False,8,1,1
+Pick up the notebook under the table,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table(z))))))",Success,,0,False,8,2,0
+Place at the table at the same location as the sofa,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: sofa(z))))))",Success,,0,False,8,2,1
+Pick up the notebook under the table_1,"execute(Action, lambda x: pick(x, iota(Object, lambda y: notebook(y) and under(y, iota(Object, lambda z: table_1(z))))))",Success,,0,False,8,3,0
+Place at the table_0 at the same location as the table_1,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: table_1(z))))))",Failure,,0,False,8,3,1
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,9,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,9,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,9,2,0
+Pick up the necklace_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,9,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,9,3,0
+Pick up the necklace_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,9,3,1
+Pick up the sock in front of the robot,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and infront(y, iota(Object, lambda z: robot(z))))))",Success,,0,False,10,1,0
+Pick up the sock on top of the sofa,"execute(Action, lambda x: pick(x, iota(Object, lambda y: sock(y) and ontop(y, iota(Object, lambda z: sofa(z))))))",Failure,,0,False,10,1,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,10,2,0
+Pick up the necklace_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,10,2,1
+Pick up the gym_shoe_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: gym_shoe_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Success,,0,False,10,3,0
+Place at the cabinet_0,"execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet_0(y))))",Success,,0,False,10,3,1
+Pick up the necklace_0 next to the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: necklace_0(y) and nextto(y, iota(Object, lambda z: cabinet_0(z))))))",Type of action cannot be performed,,0,False,10,3,2
+Pick up the white marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,11,1,0
+Pick up the white marker inside the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and inside(y, iota(Object, lambda z: chair_0(z))))))",No valid target,,0,False,11,2,0
+Pick up the white marker at the same location as the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair_0(z))))))",Success,,0,False,11,3,0
+Place at the table_0 at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table_0(y) and atsamelocation(y, iota(Object, lambda z: documents(z))))))",Failed parsing,documents,0,False,11,3,1
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,1,0
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,2,0
+Pick up the document_0 on the table_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_0(y) and on(y, iota(Object, lambda z: table_0(z))))))",Failed parsing,on,0,False,12,3,0
+Pick up the document_1 inside the cabinet_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document_1(y) and inside(y, iota(Object, lambda z: cabinet_0(z))))))",No valid target,,0,False,13,1,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,2,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,13,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,14,1,0
+Pick up the white marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,14,2,0
+Pick up the white marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and on(y, iota(Object, lambda z: chair(z))))))",Failed parsing,on,0,False,14,3,0
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,1,0
+Pick up the white marker at the same location as the chair,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker(y) and white(y) and atsamelocation(y, iota(Object, lambda z: chair(z))))))",Success,,0,False,15,2,0
+Place at the table at the same location as the documents,"execute(Action, lambda x: place(x, iota(Object, lambda y: table(y) and atsamelocation(y, iota(Object, lambda z: document(z))))))",Success,,0,False,15,2,1
+Pick up the white document at the same location as the table,"execute(Action, lambda x: pick(x, iota(Object, lambda y: document(y) and white(y) and atsamelocation(y, iota(Object, lambda z: table(z))))))",Failure,,0,False,15,2,2
+Pick up the marker_0 on the chair_0,"execute(Action, lambda x: pick(x, iota(Object, lambda y: marker_0(y) and on(y, iota(Object, lambda z: chair_0(z))))))",Failed parsing,on,0,False,15,3,0

@@ -23,8 +23,8 @@ Now I first give you a few examples:
 <simplified>position of blender</simplified>
 <code>describe(Position, lambda x: position(x, iota(Object, lambda y: blender(y))))</code>
 
-<simplified>height of cabinet not infovrobot</simplified>
-<code>describe(Height, lambda x: height(x, iota(Object, lambda y: cabinet(y) and not(infovrobot(y)))))</code>
+<simplified>height of cabinet not in front of robot</simplified>
+<code>describe(Height, lambda x: height(x, iota(Object, lambda y: cabinet(y) and not(infront(y,iota(Object, lambda z: robot(z)))))))</code>
 
 <simplified>color of the apple</simplified>
 <code>describe(Color, lambda x: color(x, iota(Object, lambda y: apple(y))))</code>
@@ -32,14 +32,17 @@ Now I first give you a few examples:
 <simplified>material of the plate not next to an apple</simplified>
 <code>describe(Material, lambda x: material(x, iota(Object, lambda y: plate(y) and not(nextto(y, iota(Object, lambda z: apple(z)))))))</code>
 
-<simplified>count furniture nearby</simplified>
-<code>count(Object, lambda x: iota(Object, lambda y: furniture(y)), x)</code>
+<simplified>count furniture</simplified>
+<code>count(Object, lambda x: furniture(x)))</code>
+
+<simplified>exists rag on top of countertop</simplified>
+<code>exists(Object, lambda x: rag(x) and ontop(x, iota(Object, lambda y: countertop(y))))</code>
 
 <simplified>greater count of plates than brooms</simplified>
 <code>greater_than(count(Object, lambda x: plate(x)), count(Object, lambda x: broom(x)))</code>
 
 <simplified>exists rag on top of countertop</simplified>
-<code>exists(Object, lambda x: rag(x) and onTop(x, iota(Object, lambda y: and countertop(y))))</code>
+<code>exists(Object, lambda x: rag(x) and ontop(x, iota(Object, lambda y: countertop(y))))</code>
 
 <simplified>equal count of dustpans and brooms or less than count of dustpans than brooms</simplified>
 <code>equal(count(Object, lambda x: dustpan(x)), count(Object, lambda x: broom(x))) or less_than(count(Object, lambda x: dustpan(x)), count(Object, lambda x: broom(x)))</code>

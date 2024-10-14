@@ -140,3 +140,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# lock files
+.~lock*
+
+# wandb
+wandb/

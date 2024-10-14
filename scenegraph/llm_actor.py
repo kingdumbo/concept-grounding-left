@@ -7,6 +7,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 # Append the necessary directories to sys.path
 sys.path.append(os.path.join(current_dir, '..', 'Jacinle'))
 sys.path.append(os.path.join(current_dir, '..'))
+sys.path.append(os.path.join(current_dir, '..', "LEFT"))
 sys.path.append(current_dir)
 
 from scenegraph import Scenegraph
@@ -27,9 +28,19 @@ import torch
 TILE_PIXELS = 32
 show_furniture = False
 
+CONFIG = {
+    "model":"gpt-4o-mini",
+    "max_tokens": 256,
+    "temperature": 0.2,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0,
+    "response_format": {"type": "text"}
+}
+
 
 class LlmActor:
-    def __init__(self, environment_string, time_per_step, seed=0):
+    def __init__(self, environment_string, time_per_step, seed=0, llm_config=CONFIG):
         # init env
         self.env = gym.make(environment_string)
         if seed:
@@ -58,7 +69,8 @@ class LlmActor:
             high_level_prompt_filename="system_prompt_high_level.txt",
             initial_prompt_filename="system_prompt_actions_1.txt",
             second_prompt_template_filename="system_prompt_actions_2.txt",
-            scenegraph=self.sg
+            scenegraph=self.sg,
+            config=llm_config
         )
 
         self.reset()
@@ -119,19 +131,25 @@ class LlmActor:
         # then execute
         output, reward, done = self._execute_raw_parsing(question_dict)
         print(f"{command_string} - {raw_parsing} - {output}")
-        #wandb.log({
-        #    "command": command_string,
-        #    "raw_parsing": raw_parsing,
-        #    "output": output,
-        #    "reward": reward,
-        #    "task_done": done
-        #})
 
-        return output, reward, done
+        # for logging
+        log = {
+            "command": command_string,
+            "raw_parsing": raw_parsing,
+            "output": output,
+            "reward": reward,
+            "task_done": done
+        }
 
-    def execute_task(self, task_obj, max_re_plans=1, max_steps = 5):
-        # extract seed
+        return output, reward, done, log
+
+    def execute_task(self, task_obj, max_re_plans=1, max_steps = 5, step_logging_list=None):
+        # extract info from task object
         seed = task_obj.get("seed")
+        task_number = task_obj.get("task_number")
+        difficulty = task_obj.get("prompt_difficulty")
+
+
         # generate initial plan
         success_conds = task_obj.get("success_conditions", [])
         self.mission = task_obj.get("mission")
@@ -150,7 +168,12 @@ class LlmActor:
         while num_steps < max_steps and not interrupted:
             for step in plan:
                 self.current_step = step
-                output, reward, done = self.execute_step(step, seed)
+                output, reward, done, log = self.execute_step(step, seed)
+                if step_logging_list is not None:
+                    log["task_number"] = task_number
+                    log["difficulty"] = difficulty
+                    log["step_number"] = num_steps
+                    step_logging_list.append(log)
                 num_steps += 1
                 if output != "Success":
                     interrupted = True
@@ -174,7 +197,7 @@ class LlmActor:
             "passing_conds": num_passing_success_conds,
             "success_rate": num_passing_success_conds/num_success_conds,
             "failed_conds": not_passinng_success_conds,
-            "prompt_difficulty": task_obj.get("prompt_difficulty"),
+            "prompt_difficulty": difficulty,
             "final_output": output,
             "plan": plan
         }
@@ -210,17 +233,20 @@ def parse_yaml(filename):
         return yaml.safe_load(file)
 
 if __name__ == "__main__":
-    with_wandb = False
     T = 0
-    if with_wandb:
-        wandb.init(
-            project="Concept Grounding",
-            
-        )
+    LLM_CONFIG = {
+        "model":"gpt-4o",
+        "max_tokens": 256,
+        "temperature": 0.2,
+        "top_p": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "response_format": {"type": "text"}
+    }
+
     # load tasks
     tasks = parse_yaml("high_level_tasks.yaml")
 
-    # validate the success conditions
     with_error = []
     prev_env_string = ""
     llm_actor = None
@@ -238,40 +264,46 @@ if __name__ == "__main__":
         llm_actor.stop_render()
     pprint.pp(with_error)
     if len(with_error) > 0:
+        print(with_error)
         sys.exit()
 
     # re-run with different seeds
     seeds = [123, 456, 789, 101112, 131415]
 
     # constrain for test
-    #seeds = seeds[:2]
-    #tasks = tasks[5:7]
+    #seeds = seeds[:1]
+    #seeds = [seeds[0]]
+    #tasks = tasks[4:5]
 
     # execute tasks
     data = []
+    step_logging = []
+
     for seed in seeds:
         torch.manual_seed(seed)
-        for task in tasks:
+        for i, task in enumerate(tasks):
             for task_formulation in task["prompts"]:
                 try:
-                    task = {**task, **task_formulation, "seed": seed}
+                    task = {**task, **task_formulation, "seed": seed, "task_number": i}
                     print("TASK: " + task["mission"])
                     env_string = task["env"]
                     llm_actor = LlmActor(env_string, T, seed=seed)
                     llm_actor.start_render()
-                    summary = llm_actor.execute_task(task)
+                    summary = llm_actor.execute_task(task, step_logging_list=step_logging)
                     llm_actor.stop_render()
                     data.append(summary)
-                    if with_wandb:
-                        wandb.log(summary)
                     pprint.pp(summary)
                 except Exception as e:
                     print(f"ERROR {e} for: {task}")
+                    raise e
 
     # save data as df
     df = pd.DataFrame(data)
+    df_steps = pd.DataFrame(step_logging)
     current_file_path = os.path.abspath(__file__)
     directory = os.path.join(os.path.dirname(current_file_path), 'analysis', 'data')
-    file_path = os.path.join(directory, 'data_main.csv')
-    df.to_csv(file_path, index=False)
+    file_path_main = os.path.join(directory, f'{LLM_CONFIG["model"]}_data_main.csv')
+    file_path_steps = os.path.join(directory, f'{LLM_CONFIG["model"]}_data_main_steps.csv')
+    df.to_csv(file_path_main, index=False)
+    df_steps.to_csv(file_path_steps, index=False)
     

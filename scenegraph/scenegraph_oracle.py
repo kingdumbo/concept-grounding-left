@@ -8,6 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 # Append the necessary directories to sys.path
 sys.path.append(os.path.join(current_dir, '..', 'Jacinle'))
 sys.path.append(os.path.join(current_dir, '..'))
+sys.path.append(os.path.join(current_dir, '..', "LEFT"))
 sys.path.append(current_dir)
 
 from scenegraph import Scenegraph
@@ -142,7 +143,7 @@ if __name__ == "__main__":
 
     # load processed question bank
     from pathlib import Path
-    qb_filepath = Path(__file__).resolve().parent / "questionbank" / "questionbank_raw.json"
+    qb_filepath = Path(__file__).resolve().parent / "questionbank_raw.json"
     questionbank = load_questionbank(qb_filepath)
 
     # init oracle
@@ -150,7 +151,7 @@ if __name__ == "__main__":
 
     # init llm client
     config = {
-        "model":"gpt-4o-mini",
+        "model":"gpt-4o",
         "max_tokens": 256,
         "temperature": 0.2,
         "top_p": 1,
@@ -172,7 +173,7 @@ if __name__ == "__main__":
 
     for seed in llm_seeds:
         for q in questionbank: 
-            raw_parsing = llm_client.to_raw_parsing(q["question"], seed=seed, apply_correction=False) 
+            raw_parsing = llm_client.to_raw_parsing(q["question"], seed=seed, apply_correction=True) 
             q["raw_parsing"] = raw_parsing
             output = oracle.tell([q])
             q["pred_answer"] = output["pred_answer"][0]
@@ -184,5 +185,5 @@ if __name__ == "__main__":
     df = pd.DataFrame(data)
     current_file_path = os.path.abspath(__file__)
     directory = os.path.join(os.path.dirname(current_file_path), 'analysis', 'data')
-    file_path = os.path.join(directory, 'data_qa.csv')
+    file_path = os.path.join(directory, f'{config["model"]}_data_qa_corrected.csv')
     df.to_csv(file_path, index=False)

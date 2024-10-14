@@ -1,6 +1,6 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import pathlib
 
 try:
@@ -10,10 +10,15 @@ except:
     DATA_DIR = "./scenegraph/analysis/data"
     PLOT_DIR = "./scenegraph/analysis/plots"
 
+# filenames
+qa = "/gpt-4o_data_qa.csv"
+qa_corrected = "/gpt-4o_data_qa_corrected.csv"
+main = "/gpt-4o_data_main.csv"
+prefix = "4o"
 
 ## QA EXPERIMENT ##
-data_qa = pd.read_csv(DATA_DIR + "/data_qa.csv")
-data_qa_corrected = pd.read_csv(DATA_DIR + "/data_qa_corrected.csv")
+data_qa = pd.read_csv(DATA_DIR + qa)
+data_qa_corrected = pd.read_csv(DATA_DIR + qa_corrected)
 
 # add column corrected
 data_qa["corrected"] = False
@@ -35,11 +40,11 @@ colors = {
     'failed parsing': 'blue'
 }
 
-# First group: Filter where corrected is False, aggregate by difficulty
+# First group: Filter where corrected is True, aggregate by difficulty
 group1 = combined_data[combined_data['corrected'] == False].groupby(['difficulty', 'outcome']).size().unstack(fill_value=0)
 group1_percent = group1.div(group1.sum(axis=1), axis=0) * 100
 
-# Second group: Filter where corrected is False, aggregate by type
+# Second group: Filter where corrected is True, aggregate by type
 group2 = combined_data[combined_data['corrected'] == False].groupby(['type', 'outcome']).size().unstack(fill_value=0)
 group2_percent = group2.div(group2.sum(axis=1), axis=0) * 100
 
@@ -47,8 +52,8 @@ group2_percent = group2.div(group2.sum(axis=1), axis=0) * 100
 group3 = combined_data.groupby(['corrected', 'outcome']).size().unstack(fill_value=0)
 group3_percent = group3.div(group3.sum(axis=1), axis=0) * 100
 
-# Create three subplots with shared y-axis
-fig, axes = plt.subplots(1, 3, figsize=(12, 5), sharey=True)
+# First plot: Two subplots side by side (group1 and group2)
+fig, axes = plt.subplots(1, 2, figsize=(7, 4), sharey=True)
 
 # First subplot: Aggregated by difficulty
 group1_percent.plot(kind='bar', stacked=True, ax=axes[0], color=[colors[outcome] for outcome in group1.columns], legend=False)
@@ -63,31 +68,41 @@ axes[1].set_title('Aggregated by Type')
 axes[1].set_xlabel('Type')
 axes[1].tick_params(axis='x', rotation=0)  # Set x-axis labels to horizontal
 
+# Retrieve handles and labels from the plot directly
+handles, labels = axes[1].get_legend_handles_labels()
+
+# Set a legend for this plot
+axes[1].legend(handles, labels, title='Outcome', loc='lower right', ncol=1)
+
+# Adjust layout and show the first plot
+plt.tight_layout()
+plt.savefig(PLOT_DIR + f"/{prefix}_qa_type_difficulty.png")
+plt.show()
+
+# Second plot: One subplot (group3)
+fig, ax = plt.subplots(figsize=(4, 4))
+
 # Third subplot: Aggregated by corrected status
-group3_percent.plot(kind='bar', stacked=True, ax=axes[2], color=[colors[outcome] for outcome in group3.columns], legend=True)
-axes[2].set_title('Aggregated by Corrected Status')
-axes[2].set_xlabel('Corrected')
-axes[2].tick_params(axis='x', rotation=0)  # Set x-axis labels to horizontal
+group3_percent.plot(kind='bar', stacked=True, ax=ax, color=[colors[outcome] for outcome in group3.columns])
+ax.set_title('Aggregated by Corrected Status')
+ax.set_xlabel('Corrected')
+ax.set_ylabel('Percentage (%)')
+ax.tick_params(axis='x', rotation=0)  # Set x-axis labels to horizontal
 
-# Set a single shared legend
-handles = [plt.Line2D([0], [0], color=colors[outcome], lw=4) for outcome in ['correct', 'incorrect', 'failed parsing']]
-labels = ['Correct', 'Incorrect', 'Failed Parsing']
-#handles, labels = axes[0].get_legend_handles_labels()
-#breakpoint()
-# Add the figure-level legend
-fig.legend(handles, labels, title='Outcome', loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
-# Set a tight layout for better readability
-#plt.tight_layout()
+# Retrieve handles and labels from the plot directly
+handles, labels = ax.get_legend_handles_labels()
 
-# save
-plt.savefig(PLOT_DIR + "/qa.png")
+# Set a legend for this plot
+ax.legend(handles, labels, title='Outcome', loc='lower right', ncol=1)
 
-# Show the plot
+# Adjust layout and show the second plot
+plt.tight_layout()
+plt.savefig(PLOT_DIR + f"/{prefix}_qa_correction.png")
 plt.show()
 
 
 ## MAIN EXPERIMENT ##
-data = pd.read_csv(DATA_DIR + "/data_main.csv")
+data = pd.read_csv(DATA_DIR + main)
 
 data.head()
 
@@ -103,30 +118,66 @@ data['env'] = data['env'].replace(translation_dict)
 
 # ANALYZE FAILURE CONDITIONS
 
+
 # Filter the dataset to include only rows where the final output is not 'Success'
 non_success_data = data[data['final_output'] != 'Success']
 
-# Recheck the distribution of final outputs in the non-success data
-non_success_final_output_counts = non_success_data['final_output'].value_counts()
+# Get unique environments from the dataset
+environments = non_success_data['env'].unique()
 
-# Plot the pie chart for non-success final outputs
-plt.figure(figsize=(7,7))
-plt.pie(non_success_final_output_counts, labels=non_success_final_output_counts.index, autopct='%1.1f%%', startangle=90)
-plt.title('Reasons for Task Abortion')
-plt.axis('equal')
-# save
-plt.savefig(PLOT_DIR + "/failure_reasons.png")
+# Prepare the figure
+plt.figure(figsize=(20, 7))  # Adjust the figure size for three subplots
+
+# Set the overall figure title
+plt.suptitle("Reasons for Task Abortion per Environment", fontsize=16, y=0.85)
+
+# Collect unique final outputs to ensure consistency across pie charts
+unique_final_outputs = sorted(non_success_data['final_output'].unique())
+
+# Define colors for consistency across all pies using a colormap
+color_map = plt.get_cmap("tab20")
+colors = {final_output: color_map(i / len(unique_final_outputs)) for i, final_output in enumerate(unique_final_outputs)}
+
+# Custom autopct function to filter out 0.0% labels
+def autopct_filter_zero(pct):
+    return ('%1.1f%%' % pct) if pct > 0 else ''  # Only show percentages greater than 0
+
+for i, env in enumerate(environments, 1):
+    # Filter data for each environment
+    env_data = non_success_data[non_success_data['env'] == env]
+    
+    # Count the occurrences of final outputs for this environment
+    env_final_output_counts = env_data['final_output'].value_counts()
+
+    # Ensure that the colors correspond to the same final_output across all pie charts
+    env_final_output_counts = env_final_output_counts.reindex(unique_final_outputs, fill_value=0)
+    
+    # Create a subplot for each pie chart
+    plt.subplot(1, 3, i)
+    plt.pie(env_final_output_counts, labels=None, 
+            colors=[colors[fo] for fo in unique_final_outputs],  # Ensure same order of colors
+            autopct=autopct_filter_zero, startangle=90, labeldistance=2)
+    plt.title(f'{env}', fontsize=12, y=0.8)  # Set environment as the subplot title
+    plt.axis('equal')
+
+# Create the global legend using the consistent colors
+patches = [mpatches.Patch(color=colors[label], label=label) for label in unique_final_outputs]
+plt.legend(handles=patches, title="Final Output", bbox_to_anchor=(1.05, 0.5), loc="center left", fontsize=10)
+
+# Adjust layout to prevent overlap
+plt.tight_layout(rect=[0, 0, 0.85, 0.95])  # Adjust for legend placement and title
+
+# Save the plot
+plt.savefig(PLOT_DIR + f"/{prefix}_failure_reasons_per_env_with_legend.png")
 plt.show()
-
 
 # ANALYZE PASSING CONDS PER TASK
 
-# First, group the data by 'env', 'prompt_difficulty', and 'success_conds'
-# Calculate standard deviation for passing conditions
-grouped_data_with_std = data.groupby(['title', 'prompt_difficulty']).agg(
+# Group the data by 'env', 'title', and 'prompt_difficulty'
+grouped_data_with_std = data.groupby(['env', 'title', 'prompt_difficulty']).agg(
     total_success_conds=('success_conds', 'mean'),
     total_passing_conds=('passing_conds', 'mean'),
-    passing_conds_std=('passing_conds', 'std')  # Standard deviation for error bars
+    # passing_conds_std=('passing_conds', 'std')  # Uncomment if you have std data for error bars
 ).reset_index()
 
 # Plotting the data with error bars
@@ -134,39 +185,71 @@ plt.figure(figsize=(14, 8))
 
 # Slimmer bars with a bit of space between them
 bar_width = 0.1
-positions = [-bar_width * 1.5, 0, bar_width * 1.5]
+positions = [-bar_width * 1.5, 0, bar_width * 1.5]  # Offset for difficulty levels
 
-# Plotting the bars for each environment and difficulty
-titles = grouped_data_with_std['title'].unique()
+# Get unique environments and titles within each environment
+environments = grouped_data_with_std['env'].unique()
+
+# Create x-tick positions for each environment and title
+xticks_positions = []
+xticks_labels = []
+env_positions = []  # Store the position of each environment for labeling
+offset = 0  # To manage x-tick placement
 
 new_colors = {1: '#1f77b4', 2: '#ff7f0e', 3: '#2ca02c'}  # Blue, Orange, Green
-for i, title in enumerate(titles):
+
+for env in environments:
     # Filter the data for the current environment
-    title_data = grouped_data_with_std[grouped_data_with_std['title'] == title]
-    
-    # Plot bars for each difficulty level, tightly grouped around the current environment
-    for j, row in title_data.iterrows():
-        difficulty_idx = row['prompt_difficulty'] - 1  # Offset by difficulty
-        plt.bar(i + positions[difficulty_idx], row['total_success_conds'], width=bar_width, color='lightblue', label='Success Conditions' if i == 0 and difficulty_idx == 0 else "")
-        plt.bar(i + positions[difficulty_idx], row['total_passing_conds'], width=bar_width, color=new_colors[row['prompt_difficulty']],
-                yerr=row['passing_conds_std'], capsize=5)  # Adding error bars for passing conditions
+    env_data = grouped_data_with_std[grouped_data_with_std['env'] == env]
+    titles = env_data['title'].unique()
+
+    # Store the position for the environment label
+    env_positions.append((offset + (len(titles) - 1) / 2))  # Center position for the environment label
+
+    for i, title in enumerate(titles):
+        # Append x-tick label for each title within the environment
+        xticks_positions.append(offset + i)
+        xticks_labels.append(f'{title}')  # Only the title for the x-tick label
+
+        # Filter the data for the current title within the environment
+        title_data = env_data[env_data['title'] == title]
+
+        # Plot bars for each difficulty level, grouped around the current environment-title pair
+        for j, row in title_data.iterrows():
+            difficulty_idx = row['prompt_difficulty'] - 1  # Offset by difficulty
+            plt.bar(offset + i + positions[difficulty_idx], row['total_success_conds'], width=bar_width, color='lightblue', label='Success Conditions' if offset == 0 and difficulty_idx == 0 else "")
+            plt.bar(offset + i + positions[difficulty_idx], row['total_passing_conds'], width=bar_width, color=new_colors[row['prompt_difficulty']],
+                    # yerr=row['passing_conds_std'],  # Add this back if you have std data
+                    capsize=5)  # Adding error bars for passing conditions
+
+    offset += len(titles) + 1  # Add space between different environments
 
 # Customize the plot
-plt.title('Success conditions and passed success conditions onditions by task and difficulty')
+plt.title('Completed success conditions by task and prompt difficulty')
 plt.xlabel('Task')
 plt.ylabel('Number of success conditions')
-plt.xticks(range(len(titles)), titles, rotation=45, ha='right')  # Slanting the labels for easier reading
+plt.xticks(xticks_positions, xticks_labels, rotation=45, ha='right')  # Slanting the labels for easier reading
 plt.grid(True, axis='y')
 
 # Custom legend for difficulty levels with new color palette
 custom_legend = [plt.Line2D([0], [0], color=color, lw=4) for color in new_colors.values()]
 plt.legend(custom_legend, [f'Difficulty {lvl}' for lvl in new_colors.keys()], title='High-level task difficulty:')
 
+# Add environment labels above the grouped tasks
+for env, pos in zip(environments, env_positions):
+    plt.text(pos, plt.gca().get_ylim()[1] - 2, env, ha='center', fontsize=10)
+
+# Optionally, add vertical lines to separate the environments
+for pos in env_positions:
+    #plt.axvline(x=pos + (bar_width * 2), color='gray', linestyle='--')
+    pass
+
 plt.tight_layout()
-plt.savefig(PLOT_DIR + "/success_conditions.png")
+plt.savefig(PLOT_DIR + f"/{prefix}_success_conditions_by_env.png")
 plt.show()
 
 # ANALYZE STEPS UNTIL FAILURE PER ENV, DIFFICULTY LEVEL
+
 # Now, group the data by 'env' and 'prompt_difficulty' to calculate the steps until failure
 grouped_steps_env = non_success_data.groupby('env').agg(
     steps_until_failure_mean=('num_steps_completed', 'mean'),
@@ -179,31 +262,49 @@ grouped_steps_difficulty = non_success_data.groupby('prompt_difficulty').agg(
 ).reset_index()
 
 # Convert prompt difficulty to string for easier categorization
-grouped_steps_difficulty['category'] = grouped_steps_difficulty['prompt_difficulty'].astype(str) + " (Difficulty)"
-grouped_steps_env['category'] = grouped_steps_env['env'] + " (Environment)"
-
-# Concatenate both dataframes for unified plotting
-combined_data = pd.concat([grouped_steps_env[['category', 'steps_until_failure_mean', 'steps_until_failure_std']],
-                           grouped_steps_difficulty[['category', 'steps_until_failure_mean', 'steps_until_failure_std']]])
+grouped_steps_difficulty['category'] = grouped_steps_difficulty['prompt_difficulty'].astype(str)
+grouped_steps_env['category'] = grouped_steps_env['env'] 
 
 # Define different colors for environment and difficulty bars
-colors = ['#1f77b4' if 'Environment' in cat else '#ff7f0e' for cat in combined_data['category']]
+colors_env = ['#1f77b4'] * len(grouped_steps_env)  # Blue for environment
+colors_difficulty = ['#ff7f0e'] * len(grouped_steps_difficulty)  # Orange for difficulty
 
-# Plotting the combined data with slimmer bars and tighter grouping
-plt.figure(figsize=(14, 8))
+# Create subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 4), sharey=True)  # Share the y-axis
 
-# Plot bars with error bars (whiskers)
-bar_width = 0.4
-plt.bar(combined_data['category'], combined_data['steps_until_failure_mean'], 
-        yerr=combined_data['steps_until_failure_std'], capsize=5, color=colors, width=bar_width)
+# Plot for environment
+ax1.bar(grouped_steps_env['category'], grouped_steps_env['steps_until_failure_mean'], 
+        yerr=grouped_steps_env['steps_until_failure_std'], capsize=5, color=colors_env, width=0.4)
+ax1.set_title('Steps until Failure by Environment')
+ax1.set_xlabel('Environment')
+ax1.set_ylabel('Steps Until Failure')
 
-# Customize the plot
-plt.title('Steps until Failure grouped by Environment, Difficulty')
-plt.xlabel('Category')
-plt.ylabel('Steps Until Failure')
-plt.xticks(rotation=45, ha='right')  # Slant the labels for easier readability
-plt.grid(True, axis='y')
+# Adjust tick position to align with the end of the label
+ax1.set_xticks(ax1.get_xticks())  # Ensure ticks are set properly
+ax1.tick_params(axis='x', rotation=45)
+for tick in ax1.get_xticklabels():
+    tick.set_ha('right')  # Align the labels so the end of the text is at the tick
 
+ax1.grid(True, axis='y')
+
+# Plot for difficulty
+ax2.bar(grouped_steps_difficulty['category'], grouped_steps_difficulty['steps_until_failure_mean'], 
+        yerr=grouped_steps_difficulty['steps_until_failure_std'], capsize=5, color=colors_difficulty, width=0.4)
+ax2.set_title('Steps until Failure by Difficulty')
+ax2.set_xlabel('Difficulty')
+
+# Adjust tick position to align with the end of the label
+ax2.set_xticks(ax2.get_xticks())  # Ensure ticks are set properly
+ax2.tick_params(axis='x', rotation=0)
+for tick in ax2.get_xticklabels():
+    tick.set_ha('center')  # Align the labels so the end of the text is at the tick
+
+ax2.grid(True, axis='y')
+
+# Adjust layout to avoid overlap
 plt.tight_layout()
-plt.savefig(PLOT_DIR + "/steps_to_failure.png")
+
+# Save the plot
+plt.savefig(PLOT_DIR + f"/{prefix}_steps_to_failure_by_env_and_difficulty.png")
 plt.show()
+

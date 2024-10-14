@@ -26,8 +26,8 @@ Now I first give you a few examples:
 <simplified>position of blender</simplified>
 <code>describe(Position, lambda x: position(x, iota(Object, lambda y: blender(y))))</code>
 
-<simplified>height of cabinet not infovrobot</simplified>
-<code>describe(Height, lambda x: height(x, iota(Object, lambda y: cabinet(y) and not(infovrobot(y)))))</code>
+<simplified>height of cabinet not in front of robot</simplified>
+<code>describe(Height, lambda x: height(x, iota(Object, lambda y: cabinet(y) and not(infront(y,iota(Object, lambda z: robot(z)))))))</code>
 
 <simplified>color of the apple</simplified>
 <code>describe(Color, lambda x: color(x, iota(Object, lambda y: apple(y))))</code>
@@ -35,11 +35,20 @@ Now I first give you a few examples:
 <simplified>material of the plate not next to an apple</simplified>
 <code>describe(Material, lambda x: material(x, iota(Object, lambda y: plate(y) and not(nextto(y, iota(Object, lambda z: apple(z)))))))</code>
 
-<simplified>count furniture nearby</simplified>
-<code>count(Object, lambda x: iota(Object, lambda y: furniture(y)), x)</code>
+<simplified>count furniture</simplified>
+<code>count(Object, lambda x: furniture(x)))</code>
 
 <simplified>exists rag on top of countertop</simplified>
-<code>exists(Object, lambda x: rag(x) and onTop(x, iota(Object, lambda y: countertop(y))))</code>
+<code>exists(Object, lambda x: rag(x) and ontop(x, iota(Object, lambda y: countertop(y))))</code>
+
+<simplified>greater count of plates than brooms</simplified>
+<code>greater_than(count(Object, lambda x: plate(x)), count(Object, lambda x: broom(x)))</code>
+
+<simplified>exists rag on top of countertop</simplified>
+<code>exists(Object, lambda x: rag(x) and ontop(x, iota(Object, lambda y: countertop(y))))</code>
+
+<simplified>equal count of dustpans and brooms or less than count of dustpans than brooms</simplified>
+<code>equal(count(Object, lambda x: dustpan(x)), count(Object, lambda x: broom(x))) or less_than(count(Object, lambda x: dustpan(x)), count(Object, lambda x: broom(x)))</code>
 
 <simplified>pick broom at same location as cabinet</simplified>
 <code>execute(Action, lambda x: pick(x, iota(Object, lambda y: broom(y) and atsamelocation(y, iota(Object, lambda z: cabinet(z))))))</code>
@@ -53,7 +62,7 @@ Now I first give you a few examples:
 <simplified>place blue sink on floor</simplified>
 <code>execute(Action, lambda x: place(x, iota(Object, lambda y: sink(y) and blue(y) and onfloor(y))))</code>
 
-<simplified>place openable cabinet</simplified>
-<code>execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and openable(y))))</code>
+<simplified>place open cabinet</simplified>
+<code>execute(Action, lambda x: place(x, iota(Object, lambda y: cabinet(y) and open(y))))</code>
 
 Now please translate the following simplified text into a program, using ONLY the simplified text, without looking at the original text. Output a short translated program inside <code></code>.

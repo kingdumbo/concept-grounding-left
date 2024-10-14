@@ -25,7 +25,9 @@ class Actor:
 
         self.renderer = renderer
 
-        self.status_list = ["Success", "Failure", "Type of action cannot be performed", "Couldn't be reached", "Nothing to place", "No valid target"]
+        self.status_list = ["Success", "Failure", "Type of action cannot be performed", "Couldn't be reached", "Nothing to place", "No valid target", "Nowhere to place"]
+
+        self.rng = np.random.default_rng()
 
     def get_actions(self):
         return [key for key in {**self.unary_actions, **self.binary_actions}.keys()]
@@ -93,7 +95,7 @@ class Actor:
                 break
 
         if opened:
-            self.env.step(action.close)
+            self.env.step(self.actions.close)
             if self.renderer:
                 self.renderer._redraw()
             time.sleep(self.time_per_step)
@@ -112,8 +114,10 @@ class Actor:
         if not something_to_place:
             return 4, reward, done # nothing to place
 
-        # locate targe-object in env
-        target_position = object_1.cur_pos
+        # find location in furniture where can be placed
+        target_position = self._find_placement_pos(object_1)
+        if target_position is None:
+            return 6, reward, done
 
         # move there
         reached_target = self.navigate_to(target_position, look_at=True)
@@ -158,6 +162,28 @@ class Actor:
         
         return int(not placed), reward, done
 
+    def _find_placement_pos(self, object):
+        all_furn_poses = object.all_pos
+        available_poses = []
+        for pose in all_furn_poses:
+            all_per_pose = self.env.grid.get_all_objs(*pose)
+            all_places = [x is None for x in all_per_pose]
+            # last element indicates the topmost placement
+            is_available = all_places[-1]
+            if is_available:
+                available_poses.append(pose)
+        len_available_poses = len(available_poses)
+        if len_available_poses == 0:
+            return None
+        
+        # select randomly
+        place_goal = available_poses[self.rng.integers(
+                        low=0,
+                        high=len_available_poses,
+                        size=1
+                    )[0]]
+        return place_goal
+
 
     def vectorize_output(self, status):
         len_status = len(self.status_list)
@@ -179,7 +205,9 @@ class Actor:
                 if self.renderer:
                     self.renderer._redraw()
                 time.sleep(self.time_per_step)
-            if not np.all(self.env.agent_pos[::-1] == actual_goal[:2]):
+            # check if object is actually in reach
+            agent_pos = self.env.agent_pos
+            if np.sum(np.abs(agent_pos - target_position)) > 1:
                 return False
             return True
         except IndexError as e:

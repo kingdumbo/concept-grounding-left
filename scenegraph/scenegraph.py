@@ -7,6 +7,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 # Append the necessary directories to sys.path
 sys.path.append(os.path.join(current_dir, '..', 'Jacinle'))
 sys.path.append(os.path.join(current_dir, '..'))
+sys.path.append(os.path.join(current_dir, '..', "LEFT"))
 sys.path.append(current_dir)
 
 from constants import AGENT_RELATIVE_STATES, ABSOLUTE_STATES, RELATIONS, OBJ_BOOL_PROPS, OBJ_PROPS
@@ -603,10 +604,6 @@ class Scenegraph:
         return yaml.dump(summary)
 
 
-
-
-
-
 if __name__ == "__main__":
     env_strings = [
         "MiniGrid-CleaningUpTheKitchenOnly-16x16-N2-v0",
@@ -614,7 +611,7 @@ if __name__ == "__main__":
         'MiniGrid-OrganizingFileCabinet-16x16-N2-v0',
         "MiniGrid-CleaningACar-16x16-N2-v0"
     ]
-    env = gym.make(env_strings[0])
+    env = gym.make(env_strings[1])
     seed = 1
     env.seed(seed)
     env.reset()
